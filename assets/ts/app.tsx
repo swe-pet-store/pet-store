@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import ReactDOM from 'react-dom';
-
+import { createRoot } from 'react-dom/client'
 function App() {
-    const [tempState, setTempState] = useState()
+    const [tempState, setTempState] = useState<any[]>()
 
     useEffect(() => {
         axios.get('/api/pet_store/index').then(
@@ -18,19 +18,20 @@ function App() {
         return (
             <div>
                 {tempState &&
-                    tempState.map((pet,i) => {
+                    tempState.map(pet => {
+                        console.log(pet)
                         return(
                             <div>
-                                <p className='bg-red-500 text-2xl border border-black'>{tempState[i].name}</p>
-                                <p className='bg-green-500 text-lg text-white'>{tempState[i].breed}</p>
+                                <p className='bg-red-500 text-2xl border border-black'>{pet.id}</p>
+                                <p className='bg-green-500 text-lg text-white'>{pet.breed}</p>
                             </div>
                         )
 
                         }
                     )}
-                test53
+                test52
             </div>
         );
 }
 
-ReactDOM.render(<App/>, document.getElementById('root' ));
+createRoot(document.getElementById('root')!).render(<App />)

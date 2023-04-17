@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "lib": [
+        "dom",
+        "es6",
+        "es2015.promise"
+      ],
+      "jsx": "react",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "node",
+      "baseUrl": ".",
+      "paths": {
+        "*": [
+          "node_modules/*",
+          "assets/ts/*"
+        ]
+      },
+      "typeRoots": [
+        "./node_modules/@types",
+        "./assets/ts/@types"
+      ]
+    },
+    "include": [
+      "assets/ts/**/*"
+    ],
+    "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+    ]
+  }
