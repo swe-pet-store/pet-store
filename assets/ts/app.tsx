@@ -1,7 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client'
+import { useBoundStore } from './store/index';
+
+import {
+    createBrowserRouter,
+    RouterProvider,
+  } from "react-router-dom";
+
+// import { useBoundStore } from 'store';
+
 function App() {
     const [tempState, setTempState] = useState<any[]>()
 
@@ -15,6 +23,8 @@ function App() {
     },[])
 
 
+    const testZ = useBoundStore((store) => store.bears)
+    const addBearFunction = useBoundStore((store) => store.addBear)
         return (
             <div>
                 {tempState &&
@@ -24,6 +34,8 @@ function App() {
                             <div>
                                 <p className='bg-red-500 text-2xl border border-black'>{pet.id}</p>
                                 <p className='bg-green-500 text-lg text-white'>{pet.breed}</p>
+                                <p>{testZ}</p>
+                                <button onClick={addBearFunction}>CLICK</button>
                             </div>
                         )
 
