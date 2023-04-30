@@ -12,16 +12,16 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class IndexController
  * @package App\Controller
  */
-#[Route('/api/pet_store', name: 'app_index')]
 class IndexController extends AbstractController
 {
+
     private $petRepository;
     private $entityManager;
     public function __construct(EntityManagerInterface $entityManager, PetRepository $petRepository){
         $this->entityManager = $entityManager;
         $this->petRepository = $petRepository;
     }
-    #[Route('/index', name: 'app_index')]
+    #[Route('index', name: 'app_index')]
     public function index()
     {
         $pets = $this->petRepository->findAll();
@@ -33,10 +33,13 @@ class IndexController extends AbstractController
         return $this->json($arrayOfPets);
     }
 
-    #[Route('/home', name: 'app_main')]
+    /**
+    *@Route("/{reactRouting}", name="app_main", priority="-1", defaults={"reactRouting": null}, requirements={"reactRouting"=".+"})   
+    */ 
     public function main()
     {
         return $this->render('index/index.html.twig', [
         ]);
     }
 }
+
