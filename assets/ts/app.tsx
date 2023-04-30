@@ -11,26 +11,30 @@ import {
 } from 'react-router-dom'
 import { Home } from './screens/Home'
 import { NotFound } from './screens/NotFound'
+import { NavBar } from './navigators/NavBar'
+import '../styles/App.css'
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <div>Hello world!</div>,
-  },
-])
+//theme
+import 'primereact/resources/themes/saga-orange/theme.css'
+
+//core
+import 'primereact/resources/primereact.min.css'
+import { LoginPage } from './screens/LoginPage'
 
 function App() {
   useEffect(() => {
-    axios.get('/api/pet_store/index').then(e => {
-      console.log(e)
-    })
+    axios.get('/api/pet_store/index').then(e => {})
   }, [])
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <div className="md:mx-14 sm:mx-16 mx-10 mt-12 items-center justify-center">
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   )
 }
 

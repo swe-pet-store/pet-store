@@ -1,5 +1,8 @@
 import React from 'react'
-
 export const Home = () => {
-  return <div>Home</div>
+  return (
+    <div>
+      <p className="text-blue-200">HOME SCREEN</p>
+    </div>
+  )
 }
