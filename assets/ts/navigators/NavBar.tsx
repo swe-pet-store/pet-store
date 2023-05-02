@@ -14,12 +14,12 @@ export const NavBar = ({}: {}) => {
   return (
     <>
       <div className={`flex items-center justify-between `}>
-        <div className="flex font-bold text-3xl">
+        <div className="flex font-bold text-3xl md:text-2xl lg:text-3xl">
           <Logo />
           <MenuHolder flexType={'flex'} />
         </div>
 
-        <div className="h-10 w-10 mr-12 ml-12">
+        <div className="h-10 w-10 ml-12">
           <RxHamburgerMenu
             className="md:hidden "
             size={30}
@@ -30,19 +30,17 @@ export const NavBar = ({}: {}) => {
         </div>
 
         <div className="md:flex md:justify-center items-center space-x-5 hidden mr-12">
-          <Link to={'/'}>
+          <Link to={'/'} className="w-[35px] lg:w-[35px]">
             <img
               src={searchImage}
               alt="search"
-              width="35px"
               className="mix-blend-multiply"
             />
           </Link>
-          <Link to={'/login'}>
+          <Link to={'/login'} className="w-[45px] lg:w-[55px]">
             <img
               src={profileImage}
               alt="profile"
-              width="55px"
               className="mix-blend-multiply"
             />
           </Link>
