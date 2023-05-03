@@ -55,7 +55,7 @@ export const HomeShopCarousel = () => {
   return (
     <div className="lg:mx-6 xl:mx-20">
       <span className="justify-between mb-12 hidden lg:flex">
-        <p className="text-3xl font-semibold ">Best Sellers</p>
+        <p className="text-3xl font-medium ">Best Sellers</p>
         <button className="bg-black text-white px-16 py-5 -mt-2">
           SHOP MORE!
         </button>

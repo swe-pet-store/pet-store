@@ -31,7 +31,7 @@ export const ItemCarouselTemplate = (item: IItem) => {
       </div>
       <div className="mx-8 pb-10 ">
         <div className="flex justify-between items-center mt-10 mb-5">
-          <p className="font-semibold text-xl sm:text-2xl ">{item.name}</p>
+          <p className="font-medium text-xl sm:text-2xl ">{item.name}</p>
           <HiOutlineHeart className="h-8 w-8" />
           {/* <HiHeart className="h-8 w-8 text-red-600" /> */}
         </div>

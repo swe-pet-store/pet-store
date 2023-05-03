@@ -13,7 +13,6 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 //core
 import 'primereact/resources/primereact.min.css'
 import { LoginPage } from './screens/LoginPage'
-
 function App() {
   useEffect(() => {
     axios.get('/api/pet_store/index').then(e => {})
