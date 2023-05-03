@@ -1,8 +1,18 @@
+import { HomeShop } from '../components/HomeComponents/HomeShop'
+import { HomeIntro } from '../components/HomeComponents/HomeIntro'
 import React from 'react'
+import { Testimonals } from '../components/HomeComponents/Testimonials'
+import { Footer } from '../components/Footer'
+
 export const Home = () => {
   return (
-    <div>
-      <p className="text-blue-200">HOME SCREEN</p>
+    <div className="mt-14 lg:mt-28">
+      <div className="lg:mx-10">
+        <HomeIntro />
+        <HomeShop />
+      </div>
+      <Testimonals />
+      <Footer />
     </div>
   )
 }
