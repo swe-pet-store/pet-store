@@ -3,7 +3,7 @@ import { TestimonialCarousel } from './TestimonialCarousel'
 
 export const Testimonals = () => {
   return (
-    <div className="bg-[#E7DEC7] -mx-4 md:-mx-14">
+    <div className="bg-themeBrown-400 -mx-4 md:-mx-14">
       <TestimonialCarousel />
     </div>
   )

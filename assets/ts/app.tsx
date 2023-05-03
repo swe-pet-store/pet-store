@@ -13,6 +13,7 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 //core
 import 'primereact/resources/primereact.min.css'
 import { LoginPage } from './screens/LoginPage'
+import { ProfilePage } from './screens/ProfilePage'
 function App() {
   useEffect(() => {
     axios.get('/api/pet_store/index').then(e => {})
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
