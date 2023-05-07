@@ -3527,11 +3527,6 @@
   "resolved" "https://registry.npmjs.org/object-inspect/-/object-inspect-1.12.3.tgz"
   "version" "1.12.3"
 
-"object-path@0.6.0":
-  "integrity" "sha512-fxrwsCFi3/p+LeLOAwo/wyRMODZxdGBtUlWRzsEpsUVrisZbEfZ21arxLGfaWfcnqb8oHPNihIb4XPE8CQPN5A=="
-  "resolved" "https://registry.npmjs.org/object-path/-/object-path-0.6.0.tgz"
-  "version" "0.6.0"
-
 "obuf@^1.0.0", "obuf@^1.1.2":
   "integrity" "sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg=="
   "resolved" "https://registry.npmjs.org/obuf/-/obuf-1.1.2.tgz"
@@ -4600,12 +4595,10 @@
     "uuid" "^8.3.2"
     "websocket-driver" "^0.7.4"
 
-"sort-by@^1.2.0":
-  "integrity" "sha512-aRyW65r3xMnf4nxJRluCg0H/woJpksU1dQxRtXYzau30sNBOmf5HACpDd9MZDhKh7ALQ5FgSOfMPwZEtUmMqcg=="
-  "resolved" "https://registry.npmjs.org/sort-by/-/sort-by-1.2.0.tgz"
-  "version" "1.2.0"
-  dependencies:
-    "object-path" "0.6.0"
+"sort-by@^0.0.2":
+  "integrity" "sha512-iOX5oHA4a0eqTMFiWrHYqv924UeRKFBLhym7iwSVG37Egg2wApgZKAjyzM9WZjMwKv6+8Zi+nIaJ7FYsO9EkoA=="
+  "resolved" "https://registry.npmjs.org/sort-by/-/sort-by-0.0.2.tgz"
+  "version" "0.0.2"
 
 "source-map-js@^1.0.2":
   "integrity" "sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw=="
