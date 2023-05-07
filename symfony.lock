@@ -285,8 +285,8 @@
             "ref": "f8fc53f1942f76679e9ee3c25fd44865355707b5"
         },
         "files": [
-            "./assets/styles/app.css",
-             "./assets/js/app.js",
+            "./assets/styles/index.css",
+             "./assets/ts/App.tsx",
             "./config/packages/webpack_encore.yaml",
             "./package.json",
             "./webpack.config.js"
