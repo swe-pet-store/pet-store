@@ -20,6 +20,7 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 //core
 import 'primereact/resources/primereact.min.css'
 import { LoginPage } from './screens/LoginPage'
+import { Register } from './screens/RegisterPage'
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="register" element={<Register />} />
       </Routes>
     </div>
   )
