@@ -8,6 +8,7 @@ export const MenuHolder = ({ flexType }: { flexType: string }) => {
       <Link to={'/'}>home</Link>
       <Link to={'/adopt_me'}>adopt me!</Link>
       <Link to={'/shop'}>shop</Link>
+      <Link to={'/login'}>log in</Link>
     </nav>
   )
 }

@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+body {
+    background-color: #f2f2f2;
+  }
+  
+  .login-container {
+    background-color: #ffffff; 
+    width: 400px; 
+    height: 400px; 
+    margin: auto; 
+    margin-top: 100px;
+    padding: 20px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+    border-radius: 5px; 
+  }
+  
+  h1, h2 {
+    text-align: center; 
+  }
+  
+  form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label, input, button {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    align-self: center;
+  }
