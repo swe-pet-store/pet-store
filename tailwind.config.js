@@ -16,7 +16,8 @@ module.exports = {
       '4xl': '1638px',
       '5xl': '1950px',
     },
-    colors: {
+    
+    extend: {colors: {
       themeYellow:{
         400:'#FFE5A4',
         600:'#FEEDBF'
@@ -26,8 +27,7 @@ module.exports = {
         800:'#CDC1A4'
       },
       themeGreen: '#B2EA8F'
-    },
-    extend: {},
+    },},
   },
   plugins: [],
 }

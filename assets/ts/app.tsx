@@ -20,7 +20,7 @@ function App() {
   }, [])
 
   return (
-    <div className="md:mx-14 mx-4 mt-12 items-center justify-center">
+    <div className="mt-12 items-center justify-center">
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />

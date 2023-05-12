@@ -7,9 +7,15 @@ export const PersonalInfo = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <p className="font-medium text-4xl mb-3">{name}</p>
-      <p className="text-3xl mb-3">{email}</p>
-      <p className="text-3xl mb-3">+{phoneNumber}</p>
+      <p className="font-medium md:text-2xl sm:text-2xl xsm:text-3xl lg:text-4xl lg:mb-3 mb-1">
+        {name}
+      </p>
+      <p className="lg:text-3xl md:text-2xl sm:text-2xl xsm:text-3xl lg:mb-3 mb-1">
+        {email}
+      </p>
+      <p className="lg:text-3xl md:text-2xl sm:text-2xl xsm:text-3xl lg:mb-3 mb-1">
+        +{phoneNumber}
+      </p>
     </div>
   )
 }

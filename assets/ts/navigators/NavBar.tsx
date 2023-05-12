@@ -13,15 +13,15 @@ export const NavBar = ({}: {}) => {
 
   return (
     <>
-      <div className={`flex items-center justify-between `}>
+      <div className={`flex items-center justify-between self-center mx-12 `}>
         <div className="flex font-bold text-3xl md:text-2xl lg:text-3xl">
           <Logo />
-          <MenuHolder flexType={'flex'} />
+          <MenuHolder flexType={'flex'} hidden="hidden" />
         </div>
 
         <div className="h-10 w-10 ml-12">
           <RxHamburgerMenu
-            className="md:hidden "
+            className="md:hidden"
             size={30}
             onClick={() => {
               setVisibleRight(true)
@@ -53,7 +53,7 @@ export const NavBar = ({}: {}) => {
         position="right"
         onHide={() => setVisibleRight(false)}>
         <div className="text-3xl">
-          <MenuHolder flexType="flex-col" />
+          <MenuHolder flexType="flex flex-col" hidden="" />
         </div>
       </Sidebar>
     </>

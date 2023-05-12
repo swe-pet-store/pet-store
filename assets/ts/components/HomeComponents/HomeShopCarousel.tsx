@@ -1,7 +1,9 @@
 import React from 'react'
 import { Carousel } from 'primereact/carousel'
-import { ItemCarouselTemplate, responsiveOptions } from './ItemCarouselTemplate'
+import { ItemCarouselTemplate } from './ItemCarouselTemplate'
 import { IItem } from '../../interfaces/itemInterface'
+import { SwiperListProfile } from '../../components/SwiperListProfile'
+import { SwiperComponent } from '../../components/SwiperComponent'
 
 export const HomeShopCarousel = () => {
   const items: IItem[] = [
@@ -53,26 +55,15 @@ export const HomeShopCarousel = () => {
   ]
 
   return (
-    <div className="lg:mx-6 xl:mx-20">
+    <div className="lg:ml-28">
       <span className="justify-between mb-12 hidden lg:flex">
         <p className="text-3xl font-medium ">Best Sellers</p>
         <button className="bg-black text-white px-16 py-5 -mt-2">
           SHOP MORE!
         </button>
       </span>
-      <div className="-mx-6 4xl:-mx-12">
-        {items && (
-          <Carousel
-            // autoplayInterval={5000} add for automatic looping
-            // circular={true}
-            value={items}
-            numVisible={2}
-            numScroll={1}
-            itemTemplate={ItemCarouselTemplate}
-            responsiveOptions={responsiveOptions}
-            showNavigators={false}
-          />
-        )}
+      <div className="">
+        {items && <SwiperComponent type={'items'} page="Home" />}
       </div>
     </div>
   )
