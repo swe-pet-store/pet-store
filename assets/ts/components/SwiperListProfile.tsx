@@ -31,8 +31,11 @@ export const SwiperListProfile = (props: any) => {
         <SwiperComponent type={props.type} page="Profile" />
       </div>
       {/* Add Item Modal */}
-      <NewItemModal visible={false} setVisible={setItemModalVisible} />
-      <NewPetModal visible={true} setVisible={setPetModalVisible} />
+      <NewItemModal
+        visible={itemModalVisible}
+        setVisible={setItemModalVisible}
+      />
+      <NewPetModal visible={petModalVisible} setVisible={setPetModalVisible} />
     </>
   )
 }
