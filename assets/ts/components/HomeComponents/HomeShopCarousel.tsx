@@ -1,8 +1,5 @@
 import React from 'react'
-import { Carousel } from 'primereact/carousel'
-import { ItemCarouselTemplate } from './ItemCarouselTemplate'
 import { IItem } from '../../interfaces/itemInterface'
-import { SwiperListProfile } from '../../components/SwiperListProfile'
 import { SwiperComponent } from '../../components/SwiperComponent'
 
 export const HomeShopCarousel = () => {
@@ -63,7 +60,7 @@ export const HomeShopCarousel = () => {
         </button>
       </span>
       <div className="">
-        {items && <SwiperComponent type={'items'} page="Home" />}
+        {items && <SwiperComponent type={'items'} page="Home" key={444} />}
       </div>
     </div>
   )

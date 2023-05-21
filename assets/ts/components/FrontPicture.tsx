@@ -14,7 +14,6 @@ export const FrontPicture = ({ title }: { title: string }) => {
   const handleChange = (event: any) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFrontImage(event.target.files[0])
-      console.log(event.target.files[0])
     }
   }
 
