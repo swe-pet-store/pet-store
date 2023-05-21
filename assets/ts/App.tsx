@@ -1,7 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useBoundStore } from './store/index'
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+  Routes,
+} from 'react-router-dom'
 import { Home } from './screens/Home'
 import { NotFound } from './screens/NotFound'
 import { NavBar } from './navigators/NavBar'
@@ -13,20 +20,21 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 //core
 import 'primereact/resources/primereact.min.css'
 import { LoginPage } from './screens/LoginPage'
-import { ProfilePage } from './screens/ProfilePage'
+import { Register } from './screens/RegisterPage'
+
 function App() {
   useEffect(() => {
     axios.get('/api/pet_store/index').then(e => {})
   }, [])
 
   return (
-    <div className="mt-12 items-center justify-center">
+    <div className="md:mx-14 sm:mx-16 mx-10 mt-12 items-center justify-center">
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="register" element={<Register />} />
       </Routes>
     </div>
   )
