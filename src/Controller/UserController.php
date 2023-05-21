@@ -11,9 +11,19 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
+/**
+ * @Route("/api", name="api_")
+ */
 class UserController extends AbstractController
 {
+    private JWTTokenManagerInterface $jwtManager;
+
+    public function __construct(JWTTokenManagerInterface $jwtManager)
+    {
+        $this->jwtManager = $jwtManager;
+    }
     #[Route('/user', name: 'app_user')]
     public function index(): Response
     {
@@ -21,8 +31,10 @@ class UserController extends AbstractController
             'controller_name' => 'UserController',
         ]);
     }
-
-    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): void
+    /**
+     * @Route("/register", name="register", methods={"POST"})
+     */
+    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): \Symfony\Component\HttpFoundation\JsonResponse
     {
 
         $data = json_decode($request->getContent(), true);
@@ -38,11 +50,13 @@ class UserController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush();
-
+        $token = $this->jwtManager->create($user);
+        return $this->json(['token' => $token]);
 //        return $this->redirect($this->generateUrl('app_login'));
     }
     #[Route('/login', name: 'app_login')]
-    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher){
+    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): \Symfony\Component\HttpFoundation\JsonResponse|Response
+    {
         $data = json_decode($request->getContent(), true);
         $username = $data['name'];
         $password = $data['password'];
@@ -69,6 +83,8 @@ class UserController extends AbstractController
         }
 
         //generate token
+        $token = $this->jwtManager->create($user);
+        return $this->json(['token' => $token]);
         //redirect user to homepage
 
     }

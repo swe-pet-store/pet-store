@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
+class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface, \Symfony\Component\Security\Core\User\UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -229,5 +229,25 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+        // TODO: Implement getRoles() method.
+    }
+
+    public function eraseCredentials(): void
+    {
+        $this->password = null;
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->name;
+        // TODO: Implement getUserIdentifier() method.
     }
 }
