@@ -37,12 +37,13 @@ export const LoginPage = () => {
 
   const inputStyle: React.CSSProperties | undefined = {
     marginBottom: '25px',
+    marginLeft: '35px',
     border: '1.5px solid #cccccc',
-    borderRadius: '15px',
+    borderRadius: '12px',
     backgroundColor: 'white',
     fontSize: '16px',
-    padding: '8px',
-    width: '100%',
+    padding: '10px',
+    width: '80%',
     boxSizing: 'border-box',
   }
 
@@ -84,7 +85,7 @@ export const LoginPage = () => {
 
   const displayInLine: React.CSSProperties | undefined = {
     display: 'flex',
-    marginRight: '10px',
+    marginRight: '40px',
   }
 
   const linkStyle: React.CSSProperties | undefined = {
