@@ -82,7 +82,7 @@ export const HomeIntro = () => {
           <button
             onClick={postReq}
             type="button"
-            className="bg-[#FFE5A4] px-10 py-6 rounded-full font-bold text-2xl mt-14 hidden lg:block">
+            className="bg-themeYellow-400 px-10 py-6 rounded-full font-bold text-2xl mt-14 hidden lg:block">
             ADOPT NOW!
           </button>
         </div>

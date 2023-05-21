@@ -6,13 +6,15 @@ import { Footer } from '../components/Footer'
 
 export const Home = () => {
   return (
-    <div className="mt-14 lg:mt-28">
-      <div className="lg:mx-10">
-        <HomeIntro />
-        <HomeShop />
+    <>
+      <div className=" md:mx-14 mx-4 mt-14 lg:mt-28">
+        <div className="lg:mx-10">
+          <HomeIntro />
+          <HomeShop />
+        </div>
+        <Testimonals />
       </div>
-      <Testimonals />
       <Footer />
-    </div>
+    </>
   )
 }
