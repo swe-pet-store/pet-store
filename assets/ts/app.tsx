@@ -14,6 +14,8 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 import 'primereact/resources/primereact.min.css'
 import { LoginPage } from './screens/LoginPage'
 import { ProfilePage } from './screens/ProfilePage'
+import { AdoptMe } from './screens/AdoptMe'
+import { Shop } from './screens/Shop'
 function App() {
   useEffect(() => {
     axios.get('/api/pet_store/index').then(e => {})
@@ -26,6 +28,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/adopt_me" element={<AdoptMe />} />
+        <Route path="/shop" element={<Shop />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
