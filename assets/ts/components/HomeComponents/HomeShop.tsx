@@ -7,16 +7,18 @@ export const HomeShop = () => {
     <>
       <div className="flex flex-col mt-32">
         <span className="flex justify-between mb-8 items-center">
-          <p className="flex lg:justify-center text-[18px] sm:text-2xl lg:align-middle font-bold lg:text-3xl lg:mb-12 ">
+          <p className="flex lg:justify-center text-[20px] sm:text-2xl lg:align-middle font-bold lg:text-3xl lg:mb-12 ">
             SHOP OUR PRODUCTS
           </p>
-          <button className="bg-black text-white text-[8px] px-3 py-2 sm:px-8 sm:py-3 sm:text-sm lg:text-2xl lg:px-16 lg:py-5 -mt-2 lg:hidden">
+          <button className="bg-black text-white text-[14px] px-6 py-4 sm:px-8 sm:py-3 sm:text-sm lg:text-2xl lg:px-16 lg:py-5 -mt-2 lg:hidden">
             SHOP MORE!
           </button>
         </span>
-        <div className="flex flex-col lg:flex-row mb-32">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-9">
           <HomeShopCategories />
-          <HomeShopCarousel />
+          <div className="col-span-8">
+            <HomeShopCarousel />
+          </div>
         </div>
       </div>
     </>
