@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/item')]
 class ItemController extends AbstractController
@@ -23,6 +24,28 @@ class ItemController extends AbstractController
     {
         $this->doctrine = $doctrine;
     }
+
+
+    /**
+     * @Route("/all-items",name="app_all_items", methods={"GET"})
+     */
+    public function getAllItems(Request $request, SerializerInterface $serializer) : JsonResponse{
+
+        try{
+            $em = $this->doctrine->getManager();
+            $items = $em->getRepository(Item::class)->findAll();
+            $serialized = $serializer->serialize(
+                $items,"json",[
+                    'groups'=> 'item'
+                ]
+            );
+            return new JsonResponse($serialized,200,[],true);
+        }catch (\Exception $e){
+            return $this->json('request failed');
+        }
+
+    }
+
 
     /**
     * @Route("/add-item", name="app_add_item", methods={"POST"})   

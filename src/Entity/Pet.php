@@ -2,51 +2,66 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: PetRepository::class)]
 class Pet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['pet'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['pet'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['pet'])]
     private ?string $breed = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['pet'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'pet')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['pet'])]
     private ?Category $category = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $images = [];
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['pet'])]
+    private ?string $images;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['pet'])]
     private ?string $status = null;
 
     #[ORM\Column]
+    #[Groups(['pet'])]
     private ?int $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'pet')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['pet'])]
     private ?User $user = null;
 
     #[ORM\Column]
+    #[Groups(['pet'])]
     private ?int $lastUpdatedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['pet'])]
     private ?float $age = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['pet'])]
     private ?string $facts = null;
 
     public function getId(): ?int
@@ -102,7 +117,7 @@ class Pet
         return $this;
     }
 
-    public function getImages(): array
+    public function getImages()
     {
         return $this->images;
     }
