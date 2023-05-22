@@ -92,9 +92,13 @@ export const SwiperComponent = (props: { type: string; page: string }) => {
       {sampleThing.map((e, index) => {
         return (
           <SwiperSlide className="" virtualIndex={index} key={index}>
-            {props.type === 'pets' && <ProfilePetCard key={index} />}
+            {props.type === 'pets' && (
+              <div className="mb-12 4xl:mr-12 mr-6">
+                <ProfilePetCard key={index} />
+              </div>
+            )}
             {props.type === 'items' && (
-              <div className="mb-24 4xl:mr-12 mr-6" key={index}>
+              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
                 <ItemCarouselTemplate item={sampleItemObject} />
               </div>
             )}

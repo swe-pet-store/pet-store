@@ -27,59 +27,63 @@ export const FilterBy = ({
   const showExtras = type === 'shop' ? true : false
 
   return (
-    <div className="flex flex-col basis-1/6" style={styles}>
+    <div className="flex flex-col mr-10 md:mr-0">
       <p className="font-bold text-4xl mb-7">Filter By</p>
-      <Dropdown
-        panelStyle={{ fontSize: '24px' }}
-        className="mt-10 text-3xl"
-        value={category}
-        onChange={e => {
-          categoryFunction(e.value)
-        }}
-        options={categories}
-        placeholder="Pet Category"
-      />
-      {showExtras && (
+      <div
+        className="flex flex-row flex-wrap items-center justify-between gap-5 md:gap-0 md:items-start md:justify-start md:flex-col md:basis-1/6"
+        style={styles}>
         <Dropdown
           panelStyle={{ fontSize: '24px' }}
-          className="mt-5 text-2xl"
+          className="md:mt-10 text-3xl w-full sm:w-[45%] md:w-full"
+          value={category}
           onChange={e => {
-            itemStateFunction(e.value)
+            categoryFunction(e.value)
           }}
-          value={itemState}
-          options={itemStates}
-          placeholder="Item State"
+          options={categories}
+          placeholder="Pet Category"
         />
-      )}
-      {showExtras && (
-        <span className="mt-5">
-          <p className="bg-white text-black font-medium px-2 py-1 text-[24px] border border-gray-300">
-            Price Range
-          </p>
-          <div className="relative mx-10">
-            <Slider
-              className="mt-5"
-              value={sliderRange}
-              onChange={e => {
-                sliderRangeFunction(e.value)
-              }}
-              range
-              min={0}
-              max={240}
-            />
-            <p className="absolute left-0 ">0</p>
-            <p className="absolute right-0">240</p>
-          </div>
-          <div className="flex items-center justify-center mt-5">
-            <span className="bg-white text-black font-medium px-2 py-1 w-16 text-[16px] border border-gray-300 flex items-center justify-center">
-              {sliderRange[0]}
-            </span>
-            <span className="bg-white text-black font-medium px-2 py-1 w-16  text-[16px] border border-gray-300 flex items-center justify-center">
-              {sliderRange[1]}
-            </span>
-          </div>
-        </span>
-      )}
+        {showExtras && (
+          <Dropdown
+            panelStyle={{ fontSize: '24px' }}
+            className="md:mt-5 text-3xl w-full sm:w-[45%] md:w-full"
+            onChange={e => {
+              itemStateFunction(e.value)
+            }}
+            value={itemState}
+            options={itemStates}
+            placeholder="Item State"
+          />
+        )}
+        {showExtras && (
+          <span className="md:mt-5 w-full">
+            <p className="bg-white sm:text-center md:text-left text-black font-medium px-2 py-1 text-[24px] border border-gray-300">
+              Price Range
+            </p>
+            <div className="relative mx-10">
+              <Slider
+                className="md:mt-5 mt-7"
+                value={sliderRange}
+                onChange={e => {
+                  sliderRangeFunction(e.value)
+                }}
+                range
+                min={0}
+                max={240}
+              />
+              <p className="absolute left-0 ">0</p>
+              <p className="absolute right-0">240</p>
+            </div>
+            <div className="flex items-center justify-center mt-7 lg:mt-8">
+              <span className="bg-white text-black font-medium px-2 py-1 w-16 text-[16px] border border-gray-300 flex items-center justify-center">
+                {sliderRange[0]}
+              </span>
+              <span className="bg-white text-black font-medium px-2 py-1 w-16  text-[16px] border border-gray-300 flex items-center justify-center">
+                {sliderRange[1]}
+              </span>
+            </div>
+          </span>
+        )}
+      </div>
     </div>
   )
 }

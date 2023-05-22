@@ -29,7 +29,7 @@ export const NavBar = ({}: {}) => {
           />
         </div>
 
-        <div className="md:flex md:justify-center items-center space-x-5 hidden mr-12">
+        <div className="md:flex md:justify-center items-center space-x-5 hidden mr-5 lg:mr-12">
           <Link to={'/'} className="w-[35px] lg:w-[35px]">
             <img
               src={searchImage}
