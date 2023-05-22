@@ -311,7 +311,7 @@ export const Shop = () => {
 
   return (
     <>
-      <div className="flex ml-14 mt-20">
+      <div className="flex flex-col md:flex-row ml-7 lg:ml-14 mt-20">
         <FilterBy
           category={category}
           sliderRange={sliderRange}
