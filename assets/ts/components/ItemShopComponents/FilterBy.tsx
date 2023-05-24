@@ -2,7 +2,7 @@ import React from 'react'
 import { Dropdown } from 'primereact/dropdown'
 import { Slider } from 'primereact/slider'
 //@ts-ignore
-import styles from '../../../styles/profile.css'
+import styles from '../../../styles/shop.module.css'
 
 export const FilterBy = ({
   category,
@@ -30,6 +30,7 @@ export const FilterBy = ({
     <div className="flex flex-col mr-10 md:mr-0">
       <p className="font-bold text-4xl mb-7">Filter By</p>
       <div
+        id="FILTER"
         className="flex flex-row flex-wrap items-center justify-between gap-5 md:gap-0 md:items-start md:justify-start md:flex-col md:basis-1/6"
         style={styles}>
         <Dropdown

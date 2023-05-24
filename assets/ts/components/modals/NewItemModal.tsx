@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react'
 import { Dialog } from 'primereact/dialog'
-import axios from 'axios'
 import { ImageUploadHolder } from '../ImageUploadHolder'
 import { FrontPicture } from '../FrontPicture'
 import { Dropdown } from 'primereact/dropdown'
-import { InputNumber } from 'primereact/inputnumber'
 import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { Toast } from 'primereact/toast'
+//@ts-ignore
+import styles from '../../../styles/profile.module.css'
 
 export const NewItemModal = (props: any) => {
   const toast = useRef<any>()
@@ -40,11 +40,7 @@ export const NewItemModal = (props: any) => {
 
   const hiddenImageInput = useRef<any>()
 
-  const itemStates = [
-    { name: 'New' },
-    { name: 'Slightly Used' },
-    { name: 'Used' },
-  ]
+  const itemStates = ['New', 'Slightly Used', 'Used']
 
   const categories = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Other' }]
 
@@ -113,7 +109,7 @@ export const NewItemModal = (props: any) => {
 
           <div className="mt-5 flex flex-col">
             <div className="flex sm:flex-row flex-col sm:justify-between">
-              <div className=" w-full sm:w-1/3">
+              <div className=" w-full sm:w-1/3" style={styles}>
                 <p>Categories</p>
                 <Dropdown
                   className="w-full sm:w-11/12"
@@ -155,11 +151,12 @@ export const NewItemModal = (props: any) => {
               <div className="w-full sm:w-1/3">
                 <p>Item State</p>
                 <Dropdown
+                  style={styles}
                   className="w-full sm:w-11/12"
                   value={itemState}
                   onChange={e => setItemState(e.value)}
                   options={itemStates}
-                  optionLabel="state"
+                  // optionLabel="state"
                   placeholder="Select state"
                 />
               </div>
