@@ -35,30 +35,34 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: username
+                property: email
     firewalls:
         login:
             pattern: ^/api/login
             stateless: true
             json_login:
                 check_path: /api/login_check
+                username_path: email
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        refresh_token:
+            pattern: ^/api/token/refresh
+            stateless: true
+            refresh_jwt:
+                # The corresponding route has been declared by the recipe
+                check_path: /api/token/refresh
 
         api:
             pattern:   ^/api
             stateless: true
             jwt: ~
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true
-            provider: app_user_provider
 
     access_control:
         - { path: ^/api/register, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/login-user, roles: PUBLIC_ACCESS  }
         - { path: ^/api/login, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

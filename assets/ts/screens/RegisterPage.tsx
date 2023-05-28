@@ -1,6 +1,12 @@
 import React from 'react'
 import catImage from '../components/images/cat.png'
+import axios from "axios";
 export const Register = () => {
+  const handleSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault()
+    const payload = {email:'admin2@gmail.com', password:'admin2'}
+    axios.post('/api/register', payload).then(data => console.log("Data",data))
+  }
   return (
     <div>
       <div className="flex flex-row items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
@@ -23,7 +29,7 @@ export const Register = () => {
 
           {/* Form */}
 
-          <form className="p-4">
+          <form onSubmit={handleSubmit} className="p-4">
             <div className="flex px-5">
               <div>
                 <label

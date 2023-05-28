@@ -23,18 +23,18 @@ import { LoginPage } from './screens/LoginPage'
 import { Register } from './screens/RegisterPage'
 
 function App() {
-  useEffect(() => {
-    axios.get('/api/pet_store/index').then(e => {})
-  }, [])
+  // useEffect(() => {
+  //   axios.get('/api/pet_store/index').then(e => {})
+  // }, [])
 
   return (
     <div className="md:mx-14 sm:mx-16 mx-10 mt-12 items-center justify-center">
       <NavBar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/api/home" element={<Home />} />
+        <Route path="/api/login" element={<LoginPage />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="register" element={<Register />} />
+        <Route path="/api/register" element={<Register />} />
       </Routes>
     </div>
   )
