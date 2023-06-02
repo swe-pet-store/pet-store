@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface, \Symfony\Component\Security\Core\User\UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -240,5 +240,25 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+        // TODO: Implement getRoles() method.
+    }
+
+    public function eraseCredentials(): void
+    {
+        $this->password = null;
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->name;
+        // TODO: Implement getUserIdentifier() method.
     }
 }
