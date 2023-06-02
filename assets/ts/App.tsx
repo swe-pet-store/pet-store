@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './screens/Home'
@@ -12,18 +11,14 @@ import { AdoptMe } from './screens/AdoptMe'
 import { Shop } from './screens/Shop'
 import { SinglePetPage } from './screens/SinglePetPage'
 import { SingleItemPage } from './screens/SingleItemPage'
+import { Register } from './screens/RegisterPage'
 
 //theme
 import 'primereact/resources/themes/saga-orange/theme.css'
 
 //core
 import 'primereact/resources/primereact.min.css'
-
 function App() {
-  useEffect(() => {
-    axios.get('/api/pet_store/index').then(e => {})
-  }, [])
-
   return (
     <div className="mt-12 items-center justify-center">
       <NavBar />
@@ -34,6 +29,7 @@ function App() {
         <Route path="/adopt_me" element={<AdoptMe />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/pet/:id" element={<SinglePetPage />} />
         <Route path="/item/:id" element={<SingleItemPage />} />
       </Routes>
