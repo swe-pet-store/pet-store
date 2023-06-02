@@ -18,7 +18,7 @@ import { AdoptMe } from './screens/AdoptMe'
 import { Shop } from './screens/Shop'
 function App() {
   return (
-    <div className="md:mx-14 sm:mx-16 mx-10 mt-12 items-center justify-center">
+    <div className="mt-12 items-center justify-center">
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
