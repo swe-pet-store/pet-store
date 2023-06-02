@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -18,15 +18,18 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 
 //core
 import 'primereact/resources/primereact.min.css'
+import { ShoppingCart } from './components/modals/ShoppingCart'
 
 function App() {
   useEffect(() => {
     axios.get('/api/pet_store/index').then(e => {})
   }, [])
 
+  const [showCart, setShowCart] = useState<boolean>(false)
+
   return (
     <div className="mt-12 items-center justify-center">
-      <NavBar />
+      <NavBar setShowCart={setShowCart} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
@@ -37,6 +40,7 @@ function App() {
         <Route path="/pet/:id" element={<SinglePetPage />} />
         <Route path="/item/:id" element={<SingleItemPage />} />
       </Routes>
+      <ShoppingCart visible={true} setVisible={setShowCart} />
     </div>
   )
 }
