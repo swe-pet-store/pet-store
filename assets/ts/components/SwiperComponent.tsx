@@ -2,7 +2,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import { ProfilePetCard } from './ProfileComponents/ProfilePetCard'
-import { ItemCarouselTemplate } from './HomeComponents/ItemCarouselTemplate'
+import ItemCarouselTemplate from './HomeComponents/ItemCarouselTemplate'
 import { Virtual, Pagination, Navigation } from 'swiper'
 import 'swiper/css/pagination'
 import { TestimonialCarouselTemplate } from './HomeComponents/TestimonialCarouselTemplate'
@@ -88,15 +88,19 @@ export const SwiperComponent = (props: { type: string; page: string }) => {
       autoplay
       spaceBetween={spaceBetween}
       slidesPerView={slidesPerView}
-      breakpoints={breakPointObject}
-      onSlideChange={() => console.log('slide change')}
-      onSwiper={swiper => console.log(swiper)}>
+      breakpoints={breakPointObject}>
       {sampleThing.map((e, index) => {
         return (
-          <SwiperSlide className="" virtualIndex={index}>
-            {props.type === 'pets' && <ProfilePetCard key={index} />}
+          <SwiperSlide className="" virtualIndex={index} key={index}>
+            {props.type === 'pets' && (
+              <div className="mb-12 4xl:mr-12 mr-6">
+                <ProfilePetCard key={index} />
+              </div>
+            )}
             {props.type === 'items' && (
-              <ItemCarouselTemplate item={sampleItemObject} key={index} />
+              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
+                <ItemCarouselTemplate item={sampleItemObject} />
+              </div>
             )}
             {props.type === 'testimonial' && (
               <TestimonialCarouselTemplate
@@ -108,7 +112,9 @@ export const SwiperComponent = (props: { type: string; page: string }) => {
               />
             )}
             {props.type === 'favorites' && (
-              <ItemCarouselTemplate item={sampleItemObject} liked={true} />
+              <div className="mb-24 4xl:mr-12 mr-6" key={index}>
+                <ItemCarouselTemplate item={sampleItemObject} liked={true} />
+              </div>
             )}
           </SwiperSlide>
         )

@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { Toast } from 'primereact/toast'
+import axios from 'axios'
 
 export const NewPetModal = (props: any) => {
   const toast = useRef<any>()
@@ -21,15 +22,16 @@ export const NewPetModal = (props: any) => {
 
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
-  const [category, setCategory] = useState<string | null>(null)
+  const [category, setCategory] = useState<any | null>(null)
 
   const [name, setName] = useState<string>()
 
   const [breed, setBreed] = useState<string>()
 
-  const [status, setStatus] = useState<string>()
+  const [status, setStatus] = useState<any>()
 
   const [description, setDescription] = useState<string>()
+  const [facts, setFacts] = useState<string>()
 
   const hiddenImageInput = useRef<any>()
 
@@ -60,6 +62,21 @@ export const NewPetModal = (props: any) => {
 
   const handleDeleteImage = (index: number) => {
     setSelectedImages(prevImages => prevImages?.filter((_, i) => i !== index))
+  }
+
+  function handleSubmit() {
+    const bodyForm = {
+      category: category.name,
+      name: name,
+      breed: breed,
+      status: status.name,
+      description: description,
+      facts: facts,
+    }
+
+    axios.post('/pet/add-pet', bodyForm).then(response => {
+      console.log(response.data)
+    })
   }
 
   return (
@@ -137,7 +154,7 @@ export const NewPetModal = (props: any) => {
                   value={status}
                   onChange={e => setStatus(e.value)}
                   options={statuses}
-                  optionLabel="status"
+                  optionLabel="name"
                   placeholder="Not adopted"
                 />
               </div>
@@ -154,11 +171,11 @@ export const NewPetModal = (props: any) => {
                 />
               </span>
               <span className="flex flex-col mt-3">
-                <p>Description</p>
+                <p>Facts</p>
                 <InputTextarea
                   autoResize
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
+                  value={facts}
+                  onChange={e => setFacts(e.target.value)}
                   rows={5}
                   cols={30}
                 />
@@ -167,7 +184,11 @@ export const NewPetModal = (props: any) => {
           </div>
 
           <div className="flex items-center justify-center mt-8">
-            <button className="bg-themeGreen h-14 w-28 text-xl">SAVE</button>
+            <button
+              className="bg-themeGreen h-14 w-28 text-xl"
+              onClick={handleSubmit}>
+              SAVE
+            </button>
           </div>
         </div>
       </Dialog>

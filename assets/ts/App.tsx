@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { useBoundStore } from './store/index'
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  Route,
-  RouterProvider,
-  Routes,
-} from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './screens/Home'
 import { NotFound } from './screens/NotFound'
 import { NavBar } from './navigators/NavBar'
@@ -21,18 +13,19 @@ import 'primereact/resources/themes/saga-orange/theme.css'
 import 'primereact/resources/primereact.min.css'
 import { LoginPage } from './screens/LoginPage'
 import { Register } from './screens/RegisterPage'
-
+import { ProfilePage } from './screens/ProfilePage'
+import { AdoptMe } from './screens/AdoptMe'
+import { Shop } from './screens/Shop'
 function App() {
-  // useEffect(() => {
-  //   axios.get('/api/pet_store/index').then(e => {})
-  // }, [])
-
   return (
     <div className="md:mx-14 sm:mx-16 mx-10 mt-12 items-center justify-center">
       <NavBar />
       <Routes>
-        <Route path="/api/home" element={<Home />} />
-        <Route path="/api/login" element={<LoginPage />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/adopt_me" element={<AdoptMe />} />
+        <Route path="/shop" element={<Shop />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/api/register" element={<Register />} />
       </Routes>

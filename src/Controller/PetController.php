@@ -19,42 +19,55 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/pet', name: 'pet.')]
 class PetController extends AbstractController
 {
-    #[Route('/', name: 'index')]
-    public function index(PetRepository $petRepository): Response
-    {
-        $allPets = $petRepository->findAll();
-        return new Response($this->json($allPets));
+    /**
+     * @Route("/all-pets",name="app_all_pets", methods={"GET"})
+     */
+    public function getAllPets(Request $request, SerializerInterface $serializer) : JsonResponse{
 
-//        return $this->render('pet/index.html.twig', [
-//            'controller_name' => 'PetController',
-//        ]);
-    }
-    #[Route('/create', name: 'create')]
-    public function create(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
-    {
-        $data = json_decode($request->getContent(), true);
-        $user = $entityManager->getRepository(User::class)->find($data['user_id']);
-        $category = $entityManager->getRepository(Category::class)->find($data['category_id']);
-        $pet = new Pet();
-        $pet->setUser($user);
-        $pet->setCategory($category);
-        $pet->setName($data['name']);
-        $pet->setAge($data['age']);
-        $pet->setBreed($data['breed']);
-        $pet->setDescription($data['description']);
-        $pet->setFacts($data['facts']);
-        $pet->setImages($data['images']);
-        $pet->setStatus($data['status']);
-
-        $errors = $validator->validate($pet);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
+        try{
+            $em = $this->doctrine->getManager();
+            $items = $em->getRepository(Pet::class)->findAll();
+            $serialized = $serializer->serialize(
+                $items,"json",[
+                    'groups'=> 'pet'
+                ]
+            );
+            return new JsonResponse($serialized,200,[],true);
+        }catch (\Exception $e){
+            return $this->json('request failed');
         }
-        $entityManager->persist($pet);
-        $entityManager->flush();
 
-        return $this->redirect($this->generateUrl("pet.show"));
-
+    }
+    /**
+    * @Route("/add-pet", name="app_add_pet", methods={"POST"})   
+    * 
+    */
+    public function addPet(Request $request): JsonResponse
+    {
+        try{
+            $pet = new Pet();
+            $data = $request->getContent();
+            $data = json_decode($data, true);
+            $em  =$this->doctrine->getManager();
+            $user = $em->getRepository(User::class)->findOneBy(['id' => 1]);
+            $category = $em->getRepository(Category::class)->findOneBy(['name' => strtolower($data['category'])]);
+            $pet->setUser($user);
+            $pet->setName($data['name']);
+            $pet->setBreed($data['breed']);
+            $pet->setStatus($data['status']);
+            $pet->setCategory($category);
+            $pet->setDescription($data['description']);
+            $pet->setCreatedAt(1);
+            $pet->setLastUpdatedAt(1);
+            if($data['facts']){
+                $pet->setFacts($data['facts']);
+            }
+            $em->persist($pet);
+            $em->flush();
+            return $this->json('success');
+        }catch(\Exception $exception){
+            return $this->json('failed');
+        }
     }
 
     #[Route('/show/{id}', name: 'show')]

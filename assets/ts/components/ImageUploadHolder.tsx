@@ -12,8 +12,6 @@ export const ImageUploadHolder = ({
     <div className="mt-3 flex flex-wrap w-4/5 ">
       {selectedImages &&
         selectedImages.map((image: Blob | MediaSource, i: number) => {
-          console.log(image)
-
           return (
             <div
               key={i}
