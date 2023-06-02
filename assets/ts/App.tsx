@@ -5,17 +5,19 @@ import { Home } from './screens/Home'
 import { NotFound } from './screens/NotFound'
 import { NavBar } from './navigators/NavBar'
 import '../styles/App.css'
+import { LoginPage } from './screens/LoginPage'
+import { ProfilePage } from './screens/ProfilePage'
+import { AdoptMe } from './screens/AdoptMe'
+import { Shop } from './screens/Shop'
+import { SinglePetPage } from './screens/SinglePetPage'
+import { SingleItemPage } from './screens/SingleItemPage'
+import { Register } from './screens/RegisterPage'
 
 //theme
 import 'primereact/resources/themes/saga-orange/theme.css'
 
 //core
 import 'primereact/resources/primereact.min.css'
-import { LoginPage } from './screens/LoginPage'
-import { Register } from './screens/RegisterPage'
-import { ProfilePage } from './screens/ProfilePage'
-import { AdoptMe } from './screens/AdoptMe'
-import { Shop } from './screens/Shop'
 function App() {
   return (
     <div className="mt-12 items-center justify-center">
@@ -27,7 +29,9 @@ function App() {
         <Route path="/adopt_me" element={<AdoptMe />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/api/register" element={<Register />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/pet/:id" element={<SinglePetPage />} />
+        <Route path="/item/:id" element={<SingleItemPage />} />
       </Routes>
     </div>
   )
