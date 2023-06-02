@@ -7,7 +7,6 @@ import 'swiper/css'
 import 'swiper/css/free-mode'
 import 'swiper/css/navigation'
 import 'swiper/css/thumbs'
-
 // import required modules
 import { FreeMode, Navigation, Thumbs } from 'swiper'
 export const PetImageGallery = () => {
@@ -17,99 +16,63 @@ export const PetImageGallery = () => {
   return (
     <>
       <Swiper
-        // virtual
-        style={{}}
-        loop={true}
-        // spaceBetween={40}
+        style={{
+          height: 400,
+          borderTopRightRadius: 20,
+          borderTopLeftRadius: 20,
+          boxShadow:
+            '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        }}
+        // loop={true}
         navigation={true}
-        // centeredSlides={true}
         thumbs={{
           swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
         }}
-        // thumbs={{ swiper: thumbsSwiper }}
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2">
         {randArr.map((_, index) => {
           return (
             <SwiperSlide virtualIndex={index} key={index}>
               <img
-                className="w-[450px]"
                 src="https://swiperjs.com/demos/images/nature-1.jpg"
+                className="object-cover object-center h-full w-full"
               />
             </SwiperSlide>
           )
         })}
       </Swiper>
       <Swiper
+        style={{
+          paddingTop: 40,
+          paddingBottom: 40,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          boxShadow:
+            '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+          backgroundColor: 'white',
+          paddingRight: 40,
+          paddingLeft: 20,
+        }}
         onSwiper={e => setThumbsSwiper(e)}
-        loop={true}
-        spaceBetween={0}
-        slidesPerView={4}
-        centeredSlides={true}
-        // freeMode={true}
+        slidesPerView={2}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper">
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-1.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-2.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-3.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-4.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-5.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-6.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-7.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-8.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-9.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            className="w-[186px] h-[146px]"
-            src="https://swiperjs.com/demos/images/nature-10.jpg"
-          />
-        </SwiperSlide>
+        {randArr.map((_, index) => {
+          return (
+            <SwiperSlide virtualIndex={index} key={index} style={{}}>
+              <div className="h-full w-full items-center justify-center flex">
+                <img
+                  style={{ aspectRatio: 4 / 3 }}
+                  src="https://swiperjs.com/demos/images/nature-1.jpg"
+                  className="w-10/12
+                    object-cover object-center
+                  "
+                />
+              </div>
+            </SwiperSlide>
+          )
+        })}
       </Swiper>
     </>
   )

@@ -11,6 +11,7 @@ import { ProfilePage } from './screens/ProfilePage'
 import { AdoptMe } from './screens/AdoptMe'
 import { Shop } from './screens/Shop'
 import { SinglePetPage } from './screens/SinglePetPage'
+import { SingleItemPage } from './screens/SingleItemPage'
 
 //theme
 import 'primereact/resources/themes/saga-orange/theme.css'
@@ -34,7 +35,7 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/pet/:id" element={<SinglePetPage />} />
-        {/* <Route path="/pet" element={<SinglePetPage />} /> */}
+        <Route path="/item/:id" element={<SingleItemPage />} />
       </Routes>
     </div>
   )
