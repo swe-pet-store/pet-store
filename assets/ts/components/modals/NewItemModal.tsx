@@ -24,7 +24,7 @@ export const NewItemModal = (props: any) => {
 
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
-  const [category, setCategory] = useState<string | null>(null)
+  const [category, setCategory] = useState<any | null>(null)
 
   const [quantity, setQuantity] = useState<string>()
 
@@ -34,18 +34,17 @@ export const NewItemModal = (props: any) => {
 
   const [discount, setDiscount] = useState<string>()
 
-  const [itemState, setItemState] = useState<string | null>()
+  const [itemState, setItemState] = useState<any | null>(null)
 
   const [description, setDescription] = useState<string>()
 
   const hiddenImageInput = useRef<any>()
 
-  const itemStates = [
+  const allStates = [
     { name: 'New' },
     { name: 'Slightly Used' },
     { name: 'Used' },
   ]
-
   const categories = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Other' }]
 
   const handleClick = () => {
@@ -71,6 +70,21 @@ export const NewItemModal = (props: any) => {
 
   const handleDeleteImage = (index: number) => {
     setSelectedImages(prevImages => prevImages?.filter((_, i) => i !== index))
+  }
+
+  function handleSubmit() {
+    const bodyForm = {
+      category: category.name,
+      quantity: quantity,
+      price: price,
+      name: name,
+      description: description,
+      state: itemState.name,
+    }
+
+    axios.post('/item/add-item', bodyForm).then(response => {
+      console.log(response.data)
+    })
   }
 
   return (
@@ -158,8 +172,8 @@ export const NewItemModal = (props: any) => {
                   className="w-full sm:w-11/12"
                   value={itemState}
                   onChange={e => setItemState(e.value)}
-                  options={itemStates}
-                  optionLabel="state"
+                  options={allStates}
+                  optionLabel="name"
                   placeholder="Select state"
                 />
               </div>
@@ -191,7 +205,11 @@ export const NewItemModal = (props: any) => {
             />
           </span>
           <div className="flex items-center justify-center mt-8">
-            <button className="bg-themeGreen h-14 w-28 text-xl">SAVE</button>
+            <button
+              className="bg-themeGreen h-14 w-28 text-xl"
+              onClick={handleSubmit}>
+              SAVE
+            </button>
           </div>
         </div>
       </Dialog>
