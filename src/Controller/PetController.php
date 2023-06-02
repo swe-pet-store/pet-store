@@ -1,32 +1,24 @@
 <?php
 
-
 namespace App\Controller;
 
-
 use App\Entity\Category;
-use App\Entity\Item;
 use App\Entity\Pet;
 use App\Entity\User;
 use App\Repository\PetRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/pet')]
+
+#[Route('/pet', name: 'pet.')]
 class PetController extends AbstractController
-{   private $doctrine;
-
-    public function __construct(ManagerRegistry $doctrine)
-    {
-        $this->doctrine = $doctrine;
-    }
-
-
-
+{
     /**
      * @Route("/all-pets",name="app_all_pets", methods={"GET"})
      */
@@ -78,4 +70,41 @@ class PetController extends AbstractController
         }
     }
 
+    #[Route('/show/{id}', name: 'show')]
+
+    public function show(Pet $pet): JsonResponse
+    {
+        return $this->json($pet);
+    }
+
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete(Pet $pet, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $entityManager->remove($pet);
+        $entityManager->flush();
+
+        return $this->redirect($this->generateUrl('pet.index'));
+    }
+
+
+    #[Route('/edit/{id}', name: 'edit')]
+    public function edit(Request $request, $pet_id, PetRepository $petRepository, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $pet = $petRepository->find($pet_id);
+        $user = $entityManager->getRepository(User::class)->find($data['user_id']);
+        $category = $entityManager->getRepository(Category::class)->find($data['category_id']);
+        $pet->setUser($user);
+        $pet->setCategory($category);
+        $pet->setName($data['name']);
+        $pet->setAge($data['age']);
+        $pet->setBreed($data['breed']);
+        $pet->setDescription($data['description']);
+        $pet->setFacts($data['facts']);
+        $pet->setImages($data['images']);
+        $pet->setStatus($data['status']);
+
+        $entityManager->flush();
+        return $this->redirect($this->generateUrl('pet.show'));
+    }
 }

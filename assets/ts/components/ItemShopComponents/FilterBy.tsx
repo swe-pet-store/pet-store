@@ -2,7 +2,7 @@ import React from 'react'
 import { Dropdown } from 'primereact/dropdown'
 import { Slider } from 'primereact/slider'
 //@ts-ignore
-import styles from '../../../styles/profile.css'
+import styles from '../../../styles/shop.module.css'
 
 export const FilterBy = ({
   category,
