@@ -16,8 +16,8 @@ export const HomeShop = () => {
         </span>
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-9">
           <HomeShopCategories />
-          <div className="col-span-8">
-            <HomeShopCarousel />
+          <div className="col-span-8 lg:ml-28">
+            <HomeShopCarousel title={'Best Sellers'} />
           </div>
         </div>
       </div>

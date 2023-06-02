@@ -2,53 +2,69 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['item'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['item'])]
     private ?float $price = null;
 
     #[ORM\Column]
+    #[Groups(['item'])]
     private ?int $quantity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['item'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'item')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['item'])]
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['item'])]
     private ?string $state = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $images = [];
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['item'])]
+    private ?string $images;
 
     #[ORM\Column]
+    #[Groups(['item'])]
     private ?int $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['item'])]
     private ?int $lastUpdatedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['item'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'item')]
+    #[Groups(['item'])]
     private ?Category $category = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['item'])]
     private ?int $discount = null;
 
     public function getId(): ?int
@@ -128,7 +144,7 @@ class Item
         return $this;
     }
 
-    public function getImages(): array
+    public function getImages()
     {
         return $this->images;
     }

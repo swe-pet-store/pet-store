@@ -2,7 +2,7 @@ import React from 'react'
 import { IItem } from '../../interfaces/itemInterface'
 import { SwiperComponent } from '../../components/SwiperComponent'
 
-export const HomeShopCarousel = () => {
+export const HomeShopCarousel = ({ title }: { title: string }) => {
   const items: IItem[] = [
     {
       id: 1,
@@ -52,9 +52,9 @@ export const HomeShopCarousel = () => {
   ]
 
   return (
-    <div className="lg:ml-28">
+    <div className="">
       <span className="justify-between mb-12 hidden lg:flex">
-        <p className="text-3xl font-medium ">Best Sellers</p>
+        <p className="text-3xl font-medium ">{title}</p>
         <button className="bg-black text-white px-16 py-5 -mt-2">
           SHOP MORE!
         </button>

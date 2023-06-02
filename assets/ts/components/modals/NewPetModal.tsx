@@ -9,6 +9,7 @@ import { InputTextarea } from 'primereact/inputtextarea'
 import { Toast } from 'primereact/toast'
 //@ts-ignore
 import styles from '../../../styles/profile.module.css'
+import axios from 'axios'
 
 export const NewPetModal = (props: any) => {
   const toast = useRef<any>()
@@ -23,13 +24,13 @@ export const NewPetModal = (props: any) => {
 
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
-  const [category, setCategory] = useState<string | null>(null)
+  const [category, setCategory] = useState<any | null>(null)
 
   const [name, setName] = useState<string>()
 
   const [breed, setBreed] = useState<string>()
 
-  const [status, setStatus] = useState<string>()
+  const [status, setStatus] = useState<any>()
 
   const [description, setDescription] = useState<string>()
   const [facts, setFacts] = useState<string>()
@@ -65,6 +66,21 @@ export const NewPetModal = (props: any) => {
 
   const handleDeleteImage = (index: number) => {
     setSelectedImages(prevImages => prevImages?.filter((_, i) => i !== index))
+  }
+
+  function handleSubmit() {
+    const bodyForm = {
+      category: category.name,
+      name: name,
+      breed: breed,
+      status: status.name,
+      description: description,
+      facts: facts,
+    }
+
+    axios.post('/pet/add-pet', bodyForm).then(response => {
+      console.log(response.data)
+    })
   }
 
   return (
@@ -172,7 +188,11 @@ export const NewPetModal = (props: any) => {
           </div>
 
           <div className="flex items-center justify-center mt-8">
-            <button className="bg-themeGreen h-14 w-28 text-xl">SAVE</button>
+            <button
+              className="bg-themeGreen h-14 w-28 text-xl"
+              onClick={handleSubmit}>
+              SAVE
+            </button>
           </div>
         </div>
       </Dialog>
