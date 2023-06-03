@@ -1,78 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PetCard } from '../PetCard'
 import { IPet } from 'interfaces/petInterface'
 import petImg from '../images/home-pet-1.png'
 import axios from 'axios'
+import { SkeletonComponent } from '../../components/SkeletonComponent'
 export const HomeIntro = () => {
-  const petSamples: IPet[] = [
-    {
-      id: 1,
-      category_id: 1,
-      user_id: 1,
-      name: 'pet1',
-      breed: 'siamese',
-      description: 'random desc string',
-      images: petImg,
-      status: 'string',
-      created_at: 123,
-      last_updated_at: 124,
-      age: 1,
-      facts: 'random facts string',
-    },
-    {
-      id: 2,
-      category_id: 2,
-      user_id: 2,
-      name: 'pet2',
-      breed: 'bald',
-      description: 'random desc string 2',
-      images: petImg,
-      status: 'string 2',
-      created_at: 123,
-      last_updated_at: 124,
-      age: 2,
-      facts: 'random facts string2',
-    },
-    {
-      id: 3,
-      category_id: 3,
-      user_id: 3,
-      name: 'pet3',
-      breed: 'siamese',
-      description: 'random desc string 3',
-      images: petImg,
-      status: 'string',
-      created_at: 123,
-      last_updated_at: 124,
-      age: 1,
-      facts: 'random facts string 3',
-    },
-    {
-      id: 4,
-      category_id: 4,
-      user_id: 4,
-      name: 'pet4',
-      breed: 'bald',
-      description: 'random desc string 4',
-      images: petImg,
-      status: 'string',
-      created_at: 1234,
-      last_updated_at: 1242,
-      age: 2,
-      facts: 'random facts string 4',
-    },
-  ]
+  const [pets, setPets] = useState<IPet[]>()
 
-  const postReq = () => {
-    axios.post('/test/post/data', { data: 'test' }).then(response => {
-      console.log(response.data)
-    })
-  }
+  useEffect(() => {
+    axios
+      .get('/pet/some-pets')
+      .then(response => {
+        setPets(response.data)
+      })
+      .catch(e => console.log(e))
+  }, [])
 
   return (
     <>
       <div className="flex flex-col lg:flex-row">
-        <div className="flex flex-col w-full lg:w-1/2 mt-8 lg:mt-14 place-items-center lg:place-items-baseline">
+        <div className="flex flex-col w-full lg:w-1/2 mt-8 lg:mt-14 place-items-center lg:place-items-baseline ">
           <h1 className="font-bold text-4xl sm:text-5xl lg:text-4xl xl:text-5xl 2xl:text-6xl 2xl:mr-44 3xl:mr-32 text-center lg:text-left">
             Make your home complete with a four-legged friend!
           </h1>
@@ -80,21 +27,31 @@ export const HomeIntro = () => {
             Start Your Adoption Journey!
           </p>
           <button
-            onClick={postReq}
+            // onClick={postReq}
             type="button"
             className="bg-themeYellow-400 px-10 py-6 rounded-full font-bold text-2xl mt-14 hidden lg:block">
             ADOPT NOW!
           </button>
         </div>
-
-        <div className="flex flex-wrap mx-12 sm:mx-0 lg:mx-8 mt-12 lg:mt-0 lg:w-1/2 align-middle justify-center lg:ml-24 lg:mr-0">
-          {petSamples.map(pet => {
-            // return <p>test</p>
-            return (
-              <PetCard height="h-7/12" width="w-4/12" pet={pet} key={pet.id} />
-            )
-          })}
-        </div>
+        {pets ? (
+          <div className="flex flex-wrap mx-12 sm:mx-0 lg:mx-8 mt-12 lg:mt-0 lg:w-1/2 align-middle justify-center lg:ml-24 lg:mr-0">
+            {pets.map(pet => {
+              // return <p>test</p>
+              return (
+                <PetCard
+                  height="h-7/12"
+                  width="w-4/12"
+                  pet={pet}
+                  key={pet.id}
+                />
+              )
+            })}
+          </div>
+        ) : (
+          <div className=" mx-12 sm:mx-0 lg:mx-8 mt-12 lg:mt-0 lg:w-1/2 align-middle justify-center lg:ml-24 lg:mr-0 ">
+            <SkeletonComponent amount={4} home={true} />
+          </div>
+        )}
       </div>
       <div className="hidden lg:block lg:absolute left-[280px] lg:top-[400px] xl:top-[440px] 2xl:top-[580px] 3xl:top-[540px] 4xl:top-[505px] 4xl:left-[220px] 5xl:top-[450px] 5xl:left-[50px] ">
         <svg

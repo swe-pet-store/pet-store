@@ -22,9 +22,9 @@ import 'primereact/resources/primereact.min.css'
 import { ShoppingCart } from './components/modals/ShoppingCart'
 
 function App() {
-  useEffect(() => {
-    axios.get('/api/pet_store/index').then(e => {})
-  }, [])
+  // useEffect(() => {
+  //   axios.get('/api/pet_store/index').then(e => {})
+  // }, [])
 
   const [showCart, setShowCart] = useState<boolean>(false)
 
@@ -42,7 +42,7 @@ function App() {
         <Route path="/pet/:id" element={<SinglePetPage />} />
         <Route path="/item/:id" element={<SingleItemPage />} />
       </Routes>
-      <ShoppingCart visible={true} setVisible={setShowCart} />
+      <ShoppingCart visible={showCart} setVisible={setShowCart} />
     </div>
   )
 }

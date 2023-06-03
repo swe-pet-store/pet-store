@@ -21,8 +21,8 @@ export const FilterBy = ({
   itemStateFunction?: any
   type: string
 }) => {
-  const categories = ['Dog', 'Cat', 'Other']
-  const itemStates = ['New', 'Slightly Used', 'Used']
+  const categories = ['Dog', 'Cat', 'Other', 'All']
+  const itemStates = ['New', 'Slightly Used', 'Used', 'All']
 
   const showExtras = type === 'shop' ? true : false
 
@@ -35,7 +35,7 @@ export const FilterBy = ({
         style={styles}>
         <Dropdown
           panelStyle={{ fontSize: '24px' }}
-          className="md:mt-10 text-3xl w-full sm:w-[45%] md:w-full"
+          className="md:mt-10 text-3xl w-full sm:w-[55%] md:w-56"
           value={category}
           onChange={e => {
             categoryFunction(e.value)
@@ -46,7 +46,7 @@ export const FilterBy = ({
         {showExtras && (
           <Dropdown
             panelStyle={{ fontSize: '24px' }}
-            className="md:mt-5 text-3xl w-full sm:w-[45%] md:w-full"
+            className="md:mt-5 text-3xl w-full sm:w-[55%] md:w-56"
             onChange={e => {
               itemStateFunction(e.value)
             }}

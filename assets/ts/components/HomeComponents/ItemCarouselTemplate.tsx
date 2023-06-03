@@ -4,6 +4,7 @@ import memoryFoam from '../images/memory-foam-item.png'
 import { IItem } from 'interfaces/itemInterface'
 import Heart from '../images/heart-01-svgrepo-com 1.png'
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi'
+import { Link } from 'react-router-dom'
 
 interface ItemInterface {
   item: IItem
@@ -13,7 +14,9 @@ interface ItemInterface {
 const ItemCarouselTemplate = ({ item, liked }: ItemInterface) => {
   //removing mb-24 from max div
   return (
-    <div className="bg-white rounded-2xl shadow-md lg:shadow-xl h-full justify-between flex flex-col pb-3 ">
+    <Link
+      to={`/item/${item.id}`}
+      className="bg-white rounded-2xl shadow-md lg:shadow-xl h-full justify-between flex flex-col pb-3 ">
       <div className="w-full rounded-t-xl overflow-hidden">
         <img
           src={memoryFoam}
@@ -34,7 +37,7 @@ const ItemCarouselTemplate = ({ item, liked }: ItemInterface) => {
         </div>
         <p className="font-semibold text-xl sm:text-2xl ">${item.price}</p>
       </div>
-    </div>
+    </Link>
   )
 }
 

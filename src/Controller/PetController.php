@@ -14,11 +14,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
+use Symfony\Component\Serializer\SerializerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/pet', name: 'pet.')]
 class PetController extends AbstractController
 {
+
+    private $doctrine;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
     /**
      * @Route("/all-pets",name="app_all_pets", methods={"GET"})
      */
@@ -34,10 +42,57 @@ class PetController extends AbstractController
             );
             return new JsonResponse($serialized,200,[],true);
         }catch (\Exception $e){
-            return $this->json('request failed');
+            return $this->json('nope');
         }
 
     }
+
+    /**
+     * @Route("/some-pets",name="app_some_pets", methods={"GET"})
+     */
+    public function getSomePets(Request $request, SerializerInterface $serializer) : JsonResponse{
+        try{
+            $em = $this->doctrine->getManager();
+            $items = $em->getRepository(Pet::class)->findBy([], null, 4);           
+            $serialized = $serializer->serialize(
+                $items,"json",[
+                    'groups'=> 'pet'
+                ]
+            );
+            return new JsonResponse($serialized,200,[],true);
+        }catch (\Exception $e){
+            return $this->json('nope');
+        }
+
+    }
+
+
+    /**
+     * @Route("/specific-pet",name="app_specific_pets", methods={"GET"})
+     */
+    public function getSpecificPet(Request $request, SerializerInterface $serializer): JsonResponse{
+    try {
+        $id = $request->query->get('id');
+        $em = $this->doctrine->getManager();
+        $pet = $em->getRepository(Pet::class)->find($id);
+
+        if (!$pet) {
+            throw new \Exception('Pet not found');
+        }
+
+        $serialized = $serializer->serialize(
+            $pet,
+            "json",
+            ['groups' => 'pet']
+        );
+        return new JsonResponse($serialized, 200, [], true);
+    } catch (\Exception $e) {
+        return $this->json($e);
+    }
+}
+
+
+
     /**
     * @Route("/add-pet", name="app_add_pet", methods={"POST"})   
     * 

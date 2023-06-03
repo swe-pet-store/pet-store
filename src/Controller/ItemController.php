@@ -46,6 +46,50 @@ class ItemController extends AbstractController
 
     }
 
+      /**
+     * @Route("/some-items",name="app_some_items", methods={"GET"})
+     */
+    public function getSomeItems(Request $request, SerializerInterface $serializer) : JsonResponse{
+        try{
+            $em = $this->doctrine->getManager();
+            $items = $em->getRepository(Item::class)->findBy([], null, 7);           
+            $serialized = $serializer->serialize(
+                $items,"json",[
+                    'groups'=> 'item'
+                ]
+            );
+            return new JsonResponse($serialized,200,[],true);
+        }catch (\Exception $e){
+            return $this->json('request failed');
+        }
+
+    }
+
+    /**
+     * @Route("/specific-item",name="app_specific_item", methods={"GET"})
+     */
+    public function getSpecificItem(Request $request, SerializerInterface $serializer): JsonResponse{
+    try {
+        $id = $request->query->get('id');
+        $em = $this->doctrine->getManager();
+        $item = $em->getRepository(Item::class)->find($id);
+
+        if (!$item) {
+            throw new \Exception('item not found');
+        }
+
+        $serialized = $serializer->serialize(
+            $item,
+            "json",
+            ['groups' => 'item']
+        );
+        return new JsonResponse($serialized, 200, [], true);
+    } catch (\Exception $e) {
+        return $this->json($e);
+    }
+}
+
+
 
     /**
     * @Route("/add-item", name="app_add_item", methods={"POST"})   
