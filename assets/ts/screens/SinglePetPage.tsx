@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { PetHeaderInfo } from '../components/SinglePetComponents/PetHeaderInfo'
 import { PetDetailedInfo } from '../components/SinglePetComponents/PetDetailedInfo'
 import { PetImageGallery } from '../components/SinglePetComponents/PetImageGallery'
 import { HomeShopCarousel } from '../components/HomeComponents/HomeShopCarousel'
 import { Footer } from '../components/Footer'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 export const SinglePetPage = () => {
-  const petDesc = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
-  const facts = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+  const { id } = useParams()
+  const [responseInfo, setResponseInfo] = useState<any>()
+
+  useEffect(() => {
+    axios.get(`/pet/specific-pet?id=${id}`).then(res => {
+      setResponseInfo(res.data)
+    })
+  }, [])
+
+  // const petDesc = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+  // const facts = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+  if (!responseInfo) return <div></div>
   return (
     <>
       <div className="flex mx-10 flex-col">
@@ -19,14 +31,17 @@ export const SinglePetPage = () => {
           </div>
           <div className="basis-7/12">
             <PetHeaderInfo
-              age="2"
-              email="duckmail@gmail.com"
-              breed="persian"
-              name="Minnie"
-              owner="Duck Duck"
-              phoneNumber="+355676202133"
+              age={responseInfo.age}
+              email={responseInfo.user.email}
+              breed={responseInfo.breed}
+              name={responseInfo.name}
+              owner={`${responseInfo.user.name} ${responseInfo.user.surname}`}
+              phoneNumber={responseInfo.user.phoneNumber}
             />
-            <PetDetailedInfo description={petDesc} facts={facts} />
+            <PetDetailedInfo
+              description={responseInfo.description}
+              facts={responseInfo.facts}
+            />
           </div>
         </div>
         <div className="mt-20">

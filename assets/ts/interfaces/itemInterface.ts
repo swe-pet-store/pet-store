@@ -1,7 +1,7 @@
 export interface IItem {
   id: number
   user_id: number
-  category_id: number
+  category: { id: number; name: string }
   name: string
   price: number
   quantity: number

@@ -4,6 +4,8 @@ import { Search } from '../../components/Search'
 import { Paginator } from 'primereact/paginator'
 import { IItem } from 'interfaces/itemInterface'
 import { ProfilePetCard } from '../../components/ProfileComponents/ProfilePetCard'
+import { SkeletonComponent } from '../../components/SkeletonComponent'
+import { IPet } from 'interfaces/petInterface'
 export const AllSellable = ({
   items,
   filterBySearch,
@@ -18,6 +20,8 @@ export const AllSellable = ({
 
   const bigRef = useRef<any>()
 
+  const title = `All ${type}s`
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [first])
@@ -27,18 +31,18 @@ export const AllSellable = ({
       className="mt-10 md:mt-0 md:ml-10 lg:ml-16 xl:ml-24 2xl:ml-36 flex flex-col basis-4/6"
       ref={bigRef}>
       <div className="flex justify-between items-center -mt-3">
-        <p className="font-bold text-4xl">All items</p>
+        <p className="font-bold text-4xl">{title}</p>
         <Search filterTextFunction={filterBySearch} />
       </div>
 
-      <div className="flex flex-col gap-5 sm:flex-wrap sm:flex-row lg:justify-between sm:gap-5 md:gap-8 lg:gap-5 mt-11 ">
+      <div className="flex flex-col gap-5 sm:flex-wrap sm:flex-row sm:gap-5 md:gap-8 lg:gap-7 4xl:gap-10 mt-11 ">
         {items
           .slice(first, first + rows)
-          .map((item: IItem, index: React.Key | null | undefined) => {
+          .map((element: IItem & IPet, index: React.Key | null | undefined) => {
             return (
               <div className="w-[90%] sm:w-[45%] lg:w-[30%]" key={index}>
-                {type === 'item' && <ItemCarouselTemplate item={item} />}
-                {type === 'pet' && <ProfilePetCard key={index} />}
+                {type === 'item' && <ItemCarouselTemplate item={element} />}
+                {type === 'pet' && <ProfilePetCard pet={element} key={index} />}
               </div>
             )
           })}

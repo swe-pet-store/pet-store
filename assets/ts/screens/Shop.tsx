@@ -1,284 +1,14 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { FilterBy } from '../components/ItemShopComponents/FilterBy'
 import { AllSellable } from '../components/ItemShopComponents/AllSellable'
 import { Footer } from '../components/Footer'
 import { categoryTranslator } from '../utils/helperFunctions'
+import axios from 'axios'
+import { IItem } from 'interfaces/itemInterface'
+import { SkeletonComponent } from '../components/SkeletonComponent'
 export const Shop = () => {
-  const sampleItemObjects = [
-    {
-      id: 1,
-      user_id: 1,
-      category_id: 1,
-      name: 'Memory Foam Dog Bed 1',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 1',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      category_id: 2,
-      name: 'CAT THING 2',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 2',
-      state: 'used',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 3,
-      user_id: 3,
-      category_id: 3,
-      name: 'Memory Foam Dog Bed 3',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 3',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 1,
-      user_id: 1,
-      category_id: 1,
-      name: 'Memory Foam Dog Bed 1',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 1',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      category_id: 2,
-      name: 'CAT 2',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 2',
-      state: 'used',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 3,
-      user_id: 3,
-      category_id: 3,
-      name: 'Memory Foam Dog Bed 3',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 3',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 1,
-      user_id: 1,
-      category_id: 1,
-      name: 'Memory Foam Dog Bed 1',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 1',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      category_id: 2,
-      name: 'CAT ITEM 12312',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 2',
-      state: 'used',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 3,
-      user_id: 3,
-      category_id: 3,
-      name: 'Memory Foam Dog Bed 3',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 3',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 1,
-      user_id: 1,
-      category_id: 1,
-      name: 'Memory Foam Dog Bed 1',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 1',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      category_id: 2,
-      name: 'CATINHO',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 2',
-      state: 'used',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 3,
-      user_id: 3,
-      category_id: 3,
-      name: 'Memory Foam Dog Bed 3',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 3',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 1,
-      user_id: 1,
-      category_id: 1,
-      name: 'Memory Foam Dog Bed 1',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 1',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      category_id: 2,
-      name: 'CATERUSKI 2',
-      price: 120,
-      quantity: 2,
-      description: 'pet item 2',
-      state: 'used',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 3,
-      user_id: 3,
-      category_id: 3,
-      name: 'Memory Foam Dog Bed 3',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 3',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 1,
-      user_id: 1,
-      category_id: 1,
-      name: 'Memory Foam Dog Bed 1',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 1',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 2,
-      user_id: 2,
-      category_id: 2,
-      name: 'CATS 2',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 2',
-      state: 'used',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-    {
-      id: 3,
-      user_id: 3,
-      category_id: 3,
-      name: 'Memory Foam Dog Bed 9',
-      price: 20,
-      quantity: 2,
-      description: 'pet item 3',
-      state: 'new',
-      images: undefined,
-      created_at: 123,
-      last_updated_at: 125,
-      status: 'available',
-      discount: 0,
-    },
-  ]
-
-  const [items, setItems] = useState(sampleItemObjects)
-  const [updatedList, setUpdatedList] = useState(items)
+  const [items, setItems] = useState<IItem[]>()
+  const [updatedList, setUpdatedList] = useState<IItem[]>()
   const [category, setCategory] = useState<string | null>(null)
   const [sliderRange, setSliderRange] = useState<number[]>([0, 240])
   const [itemState, setItemState] = useState<string | null>(null)
@@ -288,12 +18,24 @@ export const Shop = () => {
     setFilterText(event.target.value)
   }
 
+  useEffect(() => {
+    axios.get('item/all-items').then(e => {
+      setItems(e.data)
+      setUpdatedList(e.data)
+    })
+  }, [])
+
   const filterByParameters = () => {
-    const categoryFilter: 1 | 2 | 3 | null = categoryTranslator(category!)
+    if (items === undefined || items === null) return
+    const categoryFilter: 0 | 1 | 2 | 3 | null = categoryTranslator(category!)
     const filtered = items.filter(item => {
-      if (categoryFilter && categoryFilter !== item.category_id) return false
-      if (itemState && itemState.toUpperCase() !== item.state.toUpperCase()) {
-        return false
+      if (categoryFilter !== null && categoryFilter !== 0) {
+        if (categoryFilter !== item.category.id) return false
+      }
+      if (itemState !== null && itemState?.toUpperCase() !== 'ALL') {
+        if (itemState.toUpperCase() !== item.state.toUpperCase()) {
+          return false
+        }
       }
       if (item.price < sliderRange[0] || item.price > sliderRange[1]) {
         return false
@@ -321,11 +63,15 @@ export const Shop = () => {
           itemStateFunction={setItemState}
           type={'shop'}
         />
-        <AllSellable
-          items={updatedList}
-          filterBySearch={filterBySearch}
-          type="item"
-        />
+        {updatedList ? (
+          <AllSellable
+            items={updatedList}
+            filterBySearch={filterBySearch}
+            type="item"
+          />
+        ) : (
+          <SkeletonComponent amount={9} />
+        )}
       </div>
       <Footer />
     </>

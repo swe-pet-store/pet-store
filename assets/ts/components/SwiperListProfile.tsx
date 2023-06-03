@@ -28,7 +28,12 @@ export const SwiperListProfile = (props: any) => {
             </button>
           )}
         </div>
-        <SwiperComponent type={props.type} page="Profile" key={9090} />
+        <SwiperComponent
+          itemsToShow={[]}
+          type={props.type}
+          page="Profile"
+          key={9090}
+        />
       </div>
       {/* Add Item Modal */}
       <NewItemModal

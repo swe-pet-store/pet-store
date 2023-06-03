@@ -6,6 +6,8 @@ export function categoryTranslator(category: string) {
       return 2
     case 'Other':
       return 3
+    case 'All':
+      return 0
     default:
       return null
   }
