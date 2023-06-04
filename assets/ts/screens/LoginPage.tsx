@@ -25,7 +25,7 @@ export const LoginPage = () => {
     console.log('Password:', password)
     const payload = {email: email, password: password}
     //axios.post('/api/register', payload).then(data => console.log("Data",data))
-    axios.post("/api/login_check", payload).then(r => console.log("DATA:", r))
+    axios.post("/api/login-user", payload).then(r => console.log("DATA:", r))
   }
 
   const containerStyle: React.CSSProperties | undefined = {

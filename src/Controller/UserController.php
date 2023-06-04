@@ -55,41 +55,37 @@ class UserController extends AbstractController
 
 //        return $this->redirect($this->generateUrl('app_login'));
     }
-//    /**
-//     * @Route("/login-user", name="login-user", methods={"POST"})
-//     */    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): \Symfony\Component\HttpFoundation\JsonResponse|Response
-//    {
-////        dd($request);
-//        $data = json_decode($request->getContent(), true);
+    /**
+     * @Route("/login-user", name="login-user", methods={"POST"})
+     */    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): \Symfony\Component\HttpFoundation\JsonResponse|Response
+    {
+        $data = json_decode($request->getContent(), true);
 //        $username = $data['name'];
-//        $password = $data['password'];
-//        $email = $data['email'];
-//        $user = new User();
-//        $user->setPassword(
-//            $passwordHasher->hashPassword($user, $data['password'])
-//        );
+        $password = $data['password'];
+        $email = $data['email'];
+        $user = new User();
+        $user->setPassword(
+            $passwordHasher->hashPassword($user, $data['password'])
+        );
 //        $user->setName($data['name']);
-//        $user->setEmail($data['email']);
-//        if(!$username || !$password){
-//            return new Response("Wrong credentials");
-//        }
-//
-//
-//        $isPasswordValid = $passwordHasher->isPasswordValid($user, $password);
-//        if(!$isPasswordValid){
-//            return new Response("Invalid pass");
-//        }
-//
-//        $userExists = $userRepository->findBy(['name'=>$username, 'email'=>$email]);
-//
-//        if(!$userExists){
-//            return new Response("User does not exist");
-//        }
-//
-//        //generate token
-//        $token = $this->jwtManager->create($user);
-//        return $this->json(['token' => $token]);
-//        //redirect user to homepage
-////        return $this->redirect($this->generateUrl('api_register'));
-//    }
+        $user->setEmail($data['email']);
+        if(!$email || !$password){
+            return new Response("Wrong credentials");
+        }
+        $isPasswordValid = $passwordHasher->isPasswordValid($user, $password);
+        if(!$isPasswordValid){
+            return new Response("Invalid pass");
+        }
+
+        $userExists = $userRepository->findBy(['email'=>$email]);
+        if(!$userExists){
+            return new Response("User does not exist");
+        }
+
+        //generate token
+        $token = $this->jwtManager->create($user);
+        return $this->json(['token' => $token]);
+        //redirect user to homepage
+//        return $this->redirect($this->generateUrl('api_register'));
+    }
 }

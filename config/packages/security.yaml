@@ -48,6 +48,8 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             logout:
                 path : /logout
+
+
 #        refresh_token:
 #            pattern: ^/api/token/refresh
 #            stateless: true
@@ -56,7 +58,7 @@ security:
 #                check_path: /api/token/refresh
 
         api:
-            pattern:   ^/api
+            pattern:   ^/profile
             stateless: true
             jwt: ~
 
@@ -66,11 +68,14 @@ security:
             refresh_jwt: ~
 
     access_control:
-        - { path: ^/api/register-user, roles: PUBLIC_ACCESS  }
-        - { path: ^/api/login-user, roles: PUBLIC_ACCESS  }
-        - { path: ^/api/login, roles: PUBLIC_ACCESS  }
-        - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+#        - { path: ^/profile, roles: ROLE_USER }
+#        - { path: ^/api/register-user, roles: PUBLIC_ACCESS  }
+#        - { path: ^/api/login-user, roles: PUBLIC_ACCESS  }
+#        - { path: ^/api/login, roles: PUBLIC_ACCESS  }
+#        - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
+#        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
+
 
 when@test:
     security:
