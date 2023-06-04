@@ -99,30 +99,36 @@ class PetController extends AbstractController
     */
     public function addPet(Request $request): JsonResponse
     {
-        try{
-            $pet = new Pet();
-            $data = $request->getContent();
-            $data = json_decode($data, true);
-            $em  =$this->doctrine->getManager();
-            $user = $em->getRepository(User::class)->findOneBy(['id' => 1]);
-            $category = $em->getRepository(Category::class)->findOneBy(['name' => strtolower($data['category'])]);
-            $pet->setUser($user);
-            $pet->setName($data['name']);
-            $pet->setBreed($data['breed']);
-            $pet->setStatus($data['status']);
-            $pet->setCategory($category);
-            $pet->setDescription($data['description']);
-            $pet->setCreatedAt(1);
-            $pet->setLastUpdatedAt(1);
-            if($data['facts']){
-                $pet->setFacts($data['facts']);
+            try{
+                $pet = new Pet();
+                $data = $request->getContent();
+                $data = json_decode($data, true);
+                $em  =$this->doctrine->getManager();
+                $user = $em->getRepository(User::class)->findOneBy(['id' => 1]);
+                $category = $em->getRepository(Category::class)->findOneBy(['name' => strtolower($data['category'])]);
+                $pet->setUser($user);
+                $pet->setName($data['name']);
+                $pet->setBreed($data['breed']);
+                $pet->setStatus($data['status']);
+                $pet->setCategory($category);
+                $pet->setDescription($data['description']);
+                $pet->setCreatedAt(1);
+                $pet->setLastUpdatedAt(1);
+                if($data['facts']){
+                    $pet->setFacts($data['facts']);
+                }
+                if($data['images'] && !empty($data['images'])){
+                    $pet->setImages($data['images']);
+                }
+                if($data['frontImage'] && !empty($data['frontImage'])){
+                    $pet->setFrontImage($data['frontImage']);
+                }
+                $em->persist($pet);
+                $em->flush();
+                return $this->json('success');
+            }catch (\Exception $e){
+                return $this->json('failure');
             }
-            $em->persist($pet);
-            $em->flush();
-            return $this->json('success');
-        }catch(\Exception $exception){
-            return $this->json('failed');
-        }
     }
 
     #[Route('/show/{id}', name: 'show')]

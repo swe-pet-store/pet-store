@@ -12,7 +12,7 @@ import { Toast } from 'primereact/toast'
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
 import {
-  blobsToBase64,
+  blobsToBase64, blobToBase64,
   showErrorToast,
   showProcessingToast,
   showSuccessToast,
@@ -82,6 +82,7 @@ export const NewItemModal = (props: any) => {
     }
 
     blobsToBase64(selectedImages).then(base64Array => {
+      blobToBase64(selectedFrontImage).then( frontImage64 => {
       const bodyForm = {
         category: category.name,
         quantity: quantity,
@@ -89,18 +90,20 @@ export const NewItemModal = (props: any) => {
         name: name,
         description: description,
         state: itemState,
-        // images:base64Array,
-        // frontImage:selectedFrontImage
+        images:base64Array,
+        frontImage:frontImage64
       }
 
       axios
-        .post('/item/add-item', bodyForm)
-        .then(response => {
-          setDisabled(false)
-          showSuccessToast(toast)
-          props.setVisible(false)
-        })
-        .catch(err => showErrorToast(toast, err.message))
+          .post('/item/add-item', bodyForm)
+          .then(response => {
+            setDisabled(false)
+            showSuccessToast(toast)
+            props.setVisible(false)
+          })
+          .catch(err => showErrorToast(toast, err.message))
+      })
+
     })
   }
 

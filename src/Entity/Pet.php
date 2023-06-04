@@ -37,11 +37,15 @@ class Pet
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['pet'])]
-    private ?string $images;
+    private ?array $images;
 
     #[ORM\Column(length: 255)]
     #[Groups(['pet'])]
     private ?string $status = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['pet'])]
+    private ?string $frontImage = null;
 
     #[ORM\Column]
     #[Groups(['pet'])]
@@ -117,7 +121,7 @@ class Pet
         return $this;
     }
 
-    public function getImages()
+    public function getImages(): ?array
     {
         return $this->images;
     }
@@ -129,6 +133,17 @@ class Pet
         return $this;
     }
 
+    public function getFrontImage(): ?string
+    {
+        return $this->frontImage;
+    }
+
+    public function setFrontImage(?string $frontImage): self
+    {
+        $this->frontImage = $frontImage;
+
+        return $this;
+    }
     public function getStatus(): ?string
     {
         return $this->status;
