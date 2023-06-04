@@ -6,7 +6,6 @@ import {
 } from 'primereact/inputnumber'
 //@ts-ignore
 import styles from '../../styles/shoppingcart.css'
-import { HiOutlineTrash } from 'react-icons/hi'
 
 interface IShoppingCartItem {
   itemImg: any
@@ -43,7 +42,7 @@ export const ShoppingCartItem = ({
       </span>
       <span className="col-span-2" style={styles}>
         <InputNumber
-          inputStyle={{ width: '40%' }}
+          inputStyle={{ width: '70%' }}
           style={styles}
           value={quantityVal}
           onValueChange={(e: InputNumberValueChangeEvent) => {
@@ -61,8 +60,6 @@ export const ShoppingCartItem = ({
         <button
           onClick={() => {}}
           className=" px-2 py-2 rounded-xl border-[#D55353] border text-white font-medium ">
-          {/* <HiOutlineTrash color="#D55353" size={26} />
-           */}
           <img src={trash} />
         </button>
       </span>

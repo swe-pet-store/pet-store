@@ -36,7 +36,7 @@ class UserController extends AbstractController
      */
     public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-//        dd($request);
+
         $data = json_decode($request->getContent(), true);
         $user = new User();
         $user->setName($data['name']);
@@ -47,13 +47,9 @@ class UserController extends AbstractController
         $user->setEmail($data['email']);
         $user->setAddress($data['address']);
         $user->setPhoneNumber($data['phone_number']);
-
         $entityManager->persist($user);
         $entityManager->flush();
-//        dd($user);
         return new Response("success");
-
-//        return $this->redirect($this->generateUrl('app_login'));
     }
 //    /**
 //     * @Route("/login-user", name="login-user", methods={"POST"})

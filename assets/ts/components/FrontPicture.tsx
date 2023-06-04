@@ -3,19 +3,24 @@ import blankPicture from './images/blank-picture-item-modal.svg'
 import { HiOutlineTrash } from 'react-icons/hi'
 
 export const FrontPicture = ({
+  selectedFrontImage,
+  setSelectedFrontImage,
   title,
   editable,
 }: {
+  selectedFrontImage: any
+  setSelectedFrontImage: any
   title?: string
   editable?: boolean
 }) => {
-  const [selectedFrontImage, setSelectedFrontImage] = useState<any | null>(null)
-
   const frontPictureInputRef = useRef<any>()
 
   const handleClick = () => {
     if (editable && editable !== undefined)
       frontPictureInputRef?.current?.click()
+    else if (editable === undefined) {
+      frontPictureInputRef?.current?.click()
+    }
   }
 
   const handleChange = (event: any) => {

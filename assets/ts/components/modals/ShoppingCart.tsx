@@ -68,7 +68,7 @@ export const ShoppingCart = (props: any) => {
             <p className="col-span-2 text-lg">Quantity</p>
             <p className="col-span-1 text-lg">Price</p>
           </div>
-          <div className="h-[450px] overflow-x-hidden overflow-y-scroll mb-10">
+          <div className="h-[50vh] overflow-x-hidden overflow-y-scroll mb-10">
             {arrObj.map((shopItem, idx) => (
               <ShoppingCartItem
                 description={shopItem.description}
