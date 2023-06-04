@@ -101,28 +101,27 @@ export const NewItemModal = (props: any) => {
       return
     }
 
-    blobsToBase64(selectedImages).then(base64Array => {
-      blobToBase64(selectedFrontImage)
-        .then(frontImage64 => {
-          const bodyForm = {
-            category: category,
-            quantity: quantity,
-            price: price,
-            name: name,
-            description: description,
-            state: itemState,
-            // images:base64Array,
-            // frontImage:selectedFrontImage
-          }
+
+      blobToBase64(selectedFrontImage).then( frontImage64 => {
+      const bodyForm = {
+        category: category.name,
+        quantity: quantity,
+        price: price,
+        name: name,
+        description: description,
+        state: itemState,
+        images:base64Array,
+        frontImage:frontImage64
+      }
+
 
           axios.post('/item/add-item', bodyForm).then(response => {
             setDisabled(false)
             showSuccessToast(toast)
             props.setVisible(false)
           })
-        })
-
-        .catch(err => showErrorToast(toast, err.message))
+          .catch(err => showErrorToast(toast, err.message))
+      })
     })
   }
 

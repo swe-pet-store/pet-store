@@ -11,7 +11,7 @@ import { Toast } from 'primereact/toast'
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
 import {
-  blobsToBase64,
+  blobsToBase64, blobToBase64,
   showErrorToast,
   showProcessingToast,
   showSuccessToast,
@@ -73,51 +73,40 @@ export const NewPetModal = (props: any) => {
   const handleDeleteImage = (index: number) => {
     setSelectedImages(prevImages => prevImages?.filter((_, i) => i !== index))
   }
-
   function handleSubmit() {
     setDisabled(true)
     showProcessingToast(toast)
     if (selectedImages.length === 0) {
       showErrorToast(toast, 'You have added no images')
-      // setShowSpinner(false)
       setDisabled(false)
       return
     }
 
     blobsToBase64(selectedImages).then(base64Array => {
-      const bodyForm = {
-        category: category.name,
-        name: name,
-        breed: breed,
-        status: status.name,
-        description: description,
-        facts: facts,
-        // images:base64Array,
-        // frontImage:selectedFrontImage
-      }
+      blobToBase64(selectedFrontImage)
+          .then(frontImage64 => {
+            const bodyForm = {
+              category: category,
+              name: name,
+              breed: breed,
+              status: status,
+              description: description,
+              facts: facts,
+              images: base64Array,
+              frontImage: frontImage64
+            }
 
-      axios
-        .post('/pet/add-pet', bodyForm)
-        .then(response => {
-          setDisabled(false)
-          showSuccessToast(toast)
-          props.setVisible(false)
-        })
-        .catch(err => showErrorToast(toast, err.message))
-    })
-    const bodyForm = {
-      category: category.name,
-      name: name,
-      breed: breed,
-      status: status.name,
-      description: description,
-      facts: facts,
-    }
+            axios.post('/pet/add-pet', bodyForm).then(response => {
+              setDisabled(false)
+              showSuccessToast(toast)
+              props.setVisible(false)
+            })
+          })
 
-    axios.post('/pet/add-pet', bodyForm).then(response => {
-      console.log(response.data)
+          .catch(err => showErrorToast(toast, err.message))
     })
   }
+
 
   return (
     <>
