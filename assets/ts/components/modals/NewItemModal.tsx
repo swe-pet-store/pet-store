@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { ImageUploadHolder } from '../ImageUploadHolder'
 import { FrontPicture } from '../FrontPicture'
@@ -12,19 +12,23 @@ import { Toast } from 'primereact/toast'
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
 import {
+  blobToBase64,
   blobsToBase64,
+  categoryTranslator,
   showErrorToast,
   showProcessingToast,
   showSuccessToast,
   showWarningToast,
 } from '../../utils/helperFunctions'
+import { useBoundStore } from '../../store/index'
+
 export const NewItemModal = (props: any) => {
   const toast = useRef<any>()
-
+  const store = useBoundStore()
+  const defaults = store.defaultModalItem
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
   const [selectedFrontImage, setSelectedFrontImage] = useState<any | null>(null)
-
   const [category, setCategory] = useState<any | null>(null)
 
   const [quantity, setQuantity] = useState<string>()
@@ -37,15 +41,31 @@ export const NewItemModal = (props: any) => {
 
   const [itemState, setItemState] = useState<any | null>(null)
 
-  const [description, setDescription] = useState<string>()
+  const [description, setDescription] = useState<string>('')
 
   const hiddenImageInput = useRef<any>()
 
   const itemStates = ['New', 'Slightly Used', 'Used']
 
-  const categories = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Other' }]
+  const categories = ['Dog', 'Cat', 'Other']
 
   const [disabled, setDisabled] = useState(false)
+
+  useEffect(() => {
+    console.log(defaults !== undefined)
+    console.log(defaults.hasOwnProperty('name'))
+
+    if (defaults !== undefined && defaults.hasOwnProperty('name')) {
+      setCategory(categoryTranslator(defaults.category.id))
+      setQuantity(defaults.quantity.toString())
+      setPrice(defaults.price.toString())
+      setName(defaults.name)
+      setItemState(defaults.state)
+      setDescription(defaults.description)
+      setDiscount(defaults.discount.toString())
+      setSelectedImages(JSON.parse(defaults.images))
+    }
+  }, [defaults])
 
   const handleClick = () => {
     if (selectedImages.length >= 5) {
@@ -82,24 +102,26 @@ export const NewItemModal = (props: any) => {
     }
 
     blobsToBase64(selectedImages).then(base64Array => {
-      const bodyForm = {
-        category: category.name,
-        quantity: quantity,
-        price: price,
-        name: name,
-        description: description,
-        state: itemState,
-        // images:base64Array,
-        // frontImage:selectedFrontImage
-      }
+      blobToBase64(selectedFrontImage)
+        .then(frontImage64 => {
+          const bodyForm = {
+            category: category,
+            quantity: quantity,
+            price: price,
+            name: name,
+            description: description,
+            state: itemState,
+            // images:base64Array,
+            // frontImage:selectedFrontImage
+          }
 
-      axios
-        .post('/item/add-item', bodyForm)
-        .then(response => {
-          setDisabled(false)
-          showSuccessToast(toast)
-          props.setVisible(false)
+          axios.post('/item/add-item', bodyForm).then(response => {
+            setDisabled(false)
+            showSuccessToast(toast)
+            props.setVisible(false)
+          })
         })
+
         .catch(err => showErrorToast(toast, err.message))
     })
   }
@@ -110,7 +132,10 @@ export const NewItemModal = (props: any) => {
       <Dialog
         visible={props.visible}
         className=" xsm:w-full sm:w-auto md:w-2/3 xl:w-1/2 "
-        onHide={() => props.setVisible(false)}>
+        onHide={() => {
+          props.setVisible(false)
+          store.setDefaultModalItem({})
+        }}>
         <div className=" flex flex-col mx-0 md:mx-5 font-medium text-lg  ">
           <div className="flex flex-col md:flex-row w-full items-center">
             <FrontPicture
@@ -155,8 +180,10 @@ export const NewItemModal = (props: any) => {
                   value={category}
                   onChange={e => setCategory(e.value)}
                   options={categories}
-                  optionLabel="name"
-                  placeholder="Select a Category"
+                  placeholder={
+                    defaults?.category?.name.charAt(0).toUpperCase() +
+                      defaults?.category?.name.slice(1) || 'Select a Category'
+                  }
                 />
               </div>
               <div className="w-full sm:w-1/3">
@@ -196,7 +223,12 @@ export const NewItemModal = (props: any) => {
                   onChange={e => setItemState(e.value)}
                   options={itemStates}
                   // optionLabel="state"
-                  placeholder="Select state"
+                  placeholder={
+                    defaults?.state
+                      ?.replace(/_/g, ' ')
+                      .replace(/\b\w/g, (c: string) => c.toUpperCase()) ||
+                    'Select state'
+                  }
                 />
               </div>
               <div className="flex flex-col w-full sm:w-1/3 ">

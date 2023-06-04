@@ -1,8 +1,8 @@
-import { BearSlice } from "interfaces/bearSliceInterface"
-import { StateCreator } from "zustand"
+import { ModalSlice } from 'interfaces/bearSliceInterface'
+import { StateCreator } from 'zustand'
 
-
-export const createBearSlice: StateCreator<BearSlice> = (set) => ({
-  bears: 0,
-  addBear: () => set((state) => ({ bears: state.bears + 1 })),
+export const createModalSlice: StateCreator<ModalSlice> = set => ({
+  defaultModalItem: {},
+  setDefaultModalItem: (newModalItem: any) =>
+    set(state => ({ defaultModalItem: newModalItem })),
 })

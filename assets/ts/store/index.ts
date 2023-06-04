@@ -1,8 +1,7 @@
-import { BearSlice } from 'interfaces/bearSliceInterface'
+import { ModalSlice } from 'interfaces/bearSliceInterface'
 import { create } from 'zustand'
-import { createBearSlice } from './exampleStore'
+import { createModalSlice } from './exampleStore'
 
-
-export const useBoundStore = create<BearSlice>()((...a) => ({
-    ...createBearSlice(...a),
-  }))
+export const useBoundStore = create<ModalSlice>()((...a) => ({
+  ...createModalSlice(...a),
+}))

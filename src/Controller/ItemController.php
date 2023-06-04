@@ -173,4 +173,36 @@ public function addItem(Request $request ) : JsonResponse
 
 }
 
+/**
+ * @Route("/personal-items/{userId}", name="app_personal_items", methods={"GET"})
+ */
+public function getPersonalItems(Request $request, SerializerInterface $serializer, int $userId): JsonResponse
+{
+    try {
+        // Fetch items based on user ID from the database
+        $em = $this->doctrine->getManager();
+        $items = $em->getRepository(Item::class)
+        ->createQueryBuilder('i')
+        ->join('i.user', 'u')
+        ->where('u.id = :userId')
+        ->setParameter('userId', $userId)
+        ->getQuery()
+        ->getResult();
+
+        if (empty($items)) {
+            throw new \Exception('Items not found');
+        }
+
+        // Serialize the list of items
+        $serialized = $serializer->serialize(
+            $items,
+            'json',
+            ['groups' => 'item']
+        );
+        return new JsonResponse($serialized, 200, [], true);
+    } catch (\Exception $e) {
+        return new JsonResponse(['error' => $e->getMessage()], 400);
+    }
+}
+
 }

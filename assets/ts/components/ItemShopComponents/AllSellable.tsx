@@ -6,6 +6,7 @@ import { IItem } from 'interfaces/itemInterface'
 import { ProfilePetCard } from '../../components/ProfileComponents/ProfilePetCard'
 import { SkeletonComponent } from '../../components/SkeletonComponent'
 import { IPet } from 'interfaces/petInterface'
+import { Link } from 'react-router-dom'
 export const AllSellable = ({
   items,
   filterBySearch,
@@ -42,7 +43,11 @@ export const AllSellable = ({
             return (
               <div className="w-[90%] sm:w-[45%] lg:w-[30%]" key={index}>
                 {type === 'item' && <ItemCarouselTemplate item={element} />}
-                {type === 'pet' && <ProfilePetCard pet={element} key={index} />}
+                {type === 'pet' && (
+                  <Link to={`/pet/${element.id}`}>
+                    <ProfilePetCard pet={element} key={index} />
+                  </Link>
+                )}
               </div>
             )
           })}
