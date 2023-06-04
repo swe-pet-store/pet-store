@@ -1,4 +1,4 @@
-export interface BearSlice {
-    bears: number
-    addBear: () => void
-  }
+export interface ModalSlice {
+  defaultModalItem: any
+  setDefaultModalItem: any
+}
