@@ -8,6 +8,8 @@ use App\Entity\Category;
 use App\Entity\Item;
 use App\Entity\Pet;
 use App\Entity\User;
+use App\Repository\ItemRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +26,55 @@ class ItemController extends AbstractController
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
+    }
+
+
+    /**
+     * @Route("/like-item", name="like-item", methods={"GET"})
+     */
+    public function likeItems(Request $request, UserRepository $userRepository, ItemRepository $itemRepository){
+        $user = $userRepository->findOneBy(['id'=> 1]);
+        $item = $itemRepository->findOneBy(['id'=>2]);
+        $item_likes = $item->getLikes();
+        $liked_items = $user->getLikedItems();
+        $liked_items_array =  explode(',', $liked_items);
+        if(!in_array(2, $liked_items_array)){
+            $new_liked_items_list = $liked_items.','.strval(2);
+            $user->setLikedItems($new_liked_items_list);
+            $item->setLikes($item_likes+1);
+            $em = $this->doctrine->getManager();
+            $em->persist($user);
+            $em->persist($item);
+            $em->flush();
+
+        }
+
+        return $this->json('yay');
+    }
+
+
+    /**
+     * @Route("/unlike-item", name="like-item", methods={"GET"})
+     */
+    public function unlikeItems(Request $request, UserRepository $userRepository, ItemRepository $itemRepository){
+        $user = $userRepository->findOneBy(['id'=> 1]);
+        $item = $itemRepository->findOneBy(['id'=>2]);
+        $item_likes = $item->getLikes();
+        $liked_items = $user->getLikedItems();
+        $liked_items_array =  explode(',', $liked_items);
+        if(in_array(2, $liked_items_array)){
+            $new_liked_items= array_diff( $liked_items_array, [2]);
+            $new_liked_items_list = implode(",", $new_liked_items);
+            $user->setLikedItems($new_liked_items_list);
+            $item->setLikes($item_likes-1);
+            $em = $this->doctrine->getManager();
+            $em->persist($user);
+            $em->persist($item);
+            $em->flush();
+
+        }
+
+        return $this->json('yay');
     }
 
 
@@ -209,5 +260,4 @@ public function getPersonalItems(Request $request, SerializerInterface $serializ
         return new JsonResponse(['error' => $e->getMessage()], 400);
     }
 }
-
 }

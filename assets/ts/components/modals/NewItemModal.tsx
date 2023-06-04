@@ -94,33 +94,33 @@ export const NewItemModal = (props: any) => {
 
   function handleSubmit() {
     setDisabled(true)
+
     showProcessingToast(toast)
     if (selectedImages.length === 0) {
       showErrorToast(toast, 'You have added no images')
       setDisabled(false)
       return
     }
-
-
-      blobToBase64(selectedFrontImage).then( frontImage64 => {
-      const bodyForm = {
-        category: category.name,
-        quantity: quantity,
-        price: price,
-        name: name,
-        description: description,
-        state: itemState,
-        images:base64Array,
-        frontImage:frontImage64
-      }
-
-
-          axios.post('/item/add-item', bodyForm).then(response => {
-            setDisabled(false)
-            showSuccessToast(toast)
-            props.setVisible(false)
-          })
-          .catch(err => showErrorToast(toast, err.message))
+    blobsToBase64(selectedImages).then(base64Array => {
+      blobToBase64(selectedFrontImage).then(frontImage64 => {
+        const bodyForm = {
+          category: category.name,
+          quantity: quantity,
+          price: price,
+          name: name,
+          description: description,
+          state: itemState,
+          images: base64Array,
+          frontImage: frontImage64,
+        }
+        axios
+            .post('/item/add-item', bodyForm)
+            .then(response => {
+              setDisabled(false)
+              showSuccessToast(toast)
+              props.setVisible(false)
+            })
+            .catch(err => showErrorToast(toast, err.message))
       })
     })
   }
