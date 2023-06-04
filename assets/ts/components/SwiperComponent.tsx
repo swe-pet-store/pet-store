@@ -15,39 +15,6 @@ export const SwiperComponent = (props: {
   page: string
   itemsToShow: IItem[] | ITestimonial[] | IPet[]
 }) => {
-  // var sampleThing: number[] = [1, 1, 1, 11, 1, 1]
-
-  // const sampleItemObject = {
-  //   id: 1,
-  //   user_id: 1,
-  //   category: { id: 1, name: 'Dog' },
-  //   name: 'Memory Foam Dog Bed 1',
-  //   price: 20,
-  //   quantity: 2,
-  //   description: 'pet item 1',
-  //   state: 'new',
-  //   images: undefined,
-  //   created_at: 123,
-  //   last_updated_at: 125,
-  //   status: 'available',
-  //   discount: 0,
-  // }
-
-  // const petExample = {
-  //   id: 1
-  //   category_id: number
-  //   user_id: number
-  //   name: string
-  //   breed: string
-  //   description: string
-  //   images?: any
-  //   status: string
-  //   created_at: number
-  //   last_updated_at: number
-  //   age: number
-  //   facts: string
-  // }
-
   let spaceBetween = 0
   let slidesPerView = 0
 
@@ -105,7 +72,6 @@ export const SwiperComponent = (props: {
       navigation={{
         enabled: props.type === 'testimonial',
       }}
-      //   modules={[Virtual]}
       virtual
       autoplay
       spaceBetween={spaceBetween}

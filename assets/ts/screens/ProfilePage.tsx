@@ -8,7 +8,7 @@ export const ProfilePage = () => {
     <>
       <div className="flex flex-col lg:flex-row xsm:mx-4 md:ml-4 mt-16">
         <AboutMe />
-        <div className="min-w-0 3xl:ml-12">
+        <div className="min-w-0 3xl:ml-12 w-full">
           <SwiperListProfile type={'pets'} page={'profile'} />
           <SwiperListProfile type={'items'} page={'profile'} />
           <SwiperListProfile type={'favorites'} page={'profile'} />
