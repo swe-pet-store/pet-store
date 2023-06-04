@@ -63,8 +63,9 @@ export const HomeIntro = () => {
             })}
           </div>
         ) : (
-          <div className=" mx-12 sm:mx-0 lg:mx-8 mt-12 lg:mt-0 lg:w-1/2 align-middle justify-center lg:ml-24 lg:mr-0 ">
-            <SkeletonComponent amount={4} home={true} />
+          <div className="mx-12 sm:mx-0 lg:mx-8 mt-12 lg:mt-0 lg:w-1/2 align-middle justify-center lg:ml-24 lg:mr-0 ">
+            <SkeletonComponent amount={2} home={true} />
+            <SkeletonComponent amount={2} home={true} />
           </div>
         )}
       </div>
