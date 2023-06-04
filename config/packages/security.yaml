@@ -46,20 +46,27 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        refresh_token:
-            pattern: ^/api/token/refresh
-            stateless: true
-            refresh_jwt:
-                # The corresponding route has been declared by the recipe
-                check_path: /api/token/refresh
+            logout:
+                path : /logout
+#        refresh_token:
+#            pattern: ^/api/token/refresh
+#            stateless: true
+#            refresh_jwt:
+#                # The corresponding route has been declared by the recipe
+#                check_path: /api/token/refresh
 
         api:
             pattern:   ^/api
             stateless: true
             jwt: ~
 
+        api_token_refresh:
+            pattern: ^/token/refresh
+            stateless: true
+            refresh_jwt: ~
+
     access_control:
-        - { path: ^/api/register, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/register-user, roles: PUBLIC_ACCESS  }
         - { path: ^/api/login-user, roles: PUBLIC_ACCESS  }
         - { path: ^/api/login, roles: PUBLIC_ACCESS  }
         - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
