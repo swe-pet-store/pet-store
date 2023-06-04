@@ -11,19 +11,19 @@ import { Toast } from 'primereact/toast'
 //@ts-ignore
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
-
+import {
+  blobsToBase64,
+  showErrorToast,
+  showProcessingToast,
+  showSuccessToast,
+  showWarningToast,
+} from '../../utils/helperFunctions'
 export const NewItemModal = (props: any) => {
   const toast = useRef<any>()
 
-  const showWarningToast = () => {
-    toast.current!.show({
-      severity: 'warn',
-      summary: 'Warning',
-      detail: 'You can only add up to 5 additional images per item',
-    })
-  }
-
   const [selectedImages, setSelectedImages] = useState<any[]>([])
+
+  const [selectedFrontImage, setSelectedFrontImage] = useState<any | null>(null)
 
   const [category, setCategory] = useState<any | null>(null)
 
@@ -45,9 +45,11 @@ export const NewItemModal = (props: any) => {
 
   const categories = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Other' }]
 
+  const [disabled, setDisabled] = useState(false)
+
   const handleClick = () => {
     if (selectedImages.length >= 5) {
-      showWarningToast()
+      showWarningToast(toast)
       return
     }
     hiddenImageInput?.current?.click()
@@ -56,7 +58,7 @@ export const NewItemModal = (props: any) => {
   const handleChange = (event: any) => {
     if (event.target.files && event.target.files.length > 0) {
       if (event.target.files.length > 5) {
-        showWarningToast()
+        showWarningToast(toast)
       }
 
       setSelectedImages(currentImages => [
@@ -71,17 +73,34 @@ export const NewItemModal = (props: any) => {
   }
 
   function handleSubmit() {
-    const bodyForm = {
-      category: category.name,
-      quantity: quantity,
-      price: price,
-      name: name,
-      description: description,
-      state: itemState.name,
+    setDisabled(true)
+    showProcessingToast(toast)
+    if (selectedImages.length === 0) {
+      showErrorToast(toast, 'You have added no images')
+      setDisabled(false)
+      return
     }
 
-    axios.post('/item/add-item', bodyForm).then(response => {
-      console.log(response.data)
+    blobsToBase64(selectedImages).then(base64Array => {
+      const bodyForm = {
+        category: category.name,
+        quantity: quantity,
+        price: price,
+        name: name,
+        description: description,
+        state: itemState,
+        // images:base64Array,
+        // frontImage:selectedFrontImage
+      }
+
+      axios
+        .post('/item/add-item', bodyForm)
+        .then(response => {
+          setDisabled(false)
+          showSuccessToast(toast)
+          props.setVisible(false)
+        })
+        .catch(err => showErrorToast(toast, err.message))
     })
   }
 
@@ -92,9 +111,13 @@ export const NewItemModal = (props: any) => {
         visible={props.visible}
         className=" xsm:w-full sm:w-auto md:w-2/3 xl:w-1/2 "
         onHide={() => props.setVisible(false)}>
-        <div className="flex flex-col mx-0 md:mx-5 font-medium text-lg ">
+        <div className=" flex flex-col mx-0 md:mx-5 font-medium text-lg  ">
           <div className="flex flex-col md:flex-row w-full items-center">
-            <FrontPicture title={'Item front picture'} />
+            <FrontPicture
+              title={'Item front picture'}
+              selectedFrontImage={selectedFrontImage}
+              setSelectedFrontImage={setSelectedFrontImage}
+            />
 
             <div className="md:basis-3/4 w-full text-center mt-5 md:mt-0 ">
               <p className="mb-3">Additional pictures</p>
@@ -205,8 +228,11 @@ export const NewItemModal = (props: any) => {
           </span>
           <div className="flex items-center justify-center mt-8">
             <button
-              className="bg-themeGreen h-14 w-28 text-xl"
-              onClick={handleSubmit}>
+              className={`bg-themeGreen h-14 w-28 text-xl ${
+                disabled && 'cursor-wait'
+              }`}
+              onClick={handleSubmit}
+              disabled={disabled}>
               SAVE
             </button>
           </div>

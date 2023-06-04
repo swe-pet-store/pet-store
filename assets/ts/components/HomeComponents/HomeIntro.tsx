@@ -16,6 +16,22 @@ export const HomeIntro = () => {
       .catch(e => console.log(e))
   }, [])
 
+  // useEffect(() => {
+  //   axios
+  //     .post('/api/register-user', {
+  //       name: 'John',
+  //       surname: 'Doe',
+  //       password: 'secretpassword',
+  //       email: 'johndoe@example.com',
+  //       address: '123 Main St',
+  //       phone_number: '1234567890',
+  //     })
+  //     .then(response => {
+  //       console.log(response.data)
+  //     })
+  //     .catch(e => console.log(e))
+  // }, [])
+
   return (
     <>
       <div className="flex flex-col lg:flex-row">
@@ -36,7 +52,6 @@ export const HomeIntro = () => {
         {pets ? (
           <div className="flex flex-wrap mx-12 sm:mx-0 lg:mx-8 mt-12 lg:mt-0 lg:w-1/2 align-middle justify-center lg:ml-24 lg:mr-0">
             {pets.map(pet => {
-              // return <p>test</p>
               return (
                 <PetCard
                   height="h-7/12"
@@ -56,7 +71,6 @@ export const HomeIntro = () => {
       <div className="hidden lg:block lg:absolute left-[280px] lg:top-[400px] xl:top-[440px] 2xl:top-[580px] 3xl:top-[540px] 4xl:top-[505px] 4xl:left-[220px] 5xl:top-[450px] 5xl:left-[50px] ">
         <svg
           className="lg:w-[300px] xl:w-[400px] 2xl:w-[460px] 3xl:w-[500px] 4xl:w-[700px] 5xl:w-[1080px]"
-          // width="611"
           height="376"
           viewBox="0 0 611 376"
           fill="none"
