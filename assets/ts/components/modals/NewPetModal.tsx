@@ -7,6 +7,8 @@ import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { Toast } from 'primereact/toast'
+//@ts-ignore
+import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
 
 export const NewPetModal = (props: any) => {
@@ -35,9 +37,11 @@ export const NewPetModal = (props: any) => {
 
   const hiddenImageInput = useRef<any>()
 
-  const statuses = [{ name: 'Not adopted' }, { name: 'Adopted' }]
+  const statuses = ['Not adopted', 'Adopted']
 
-  const categories = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Other' }]
+  const categories = ['Dog', 'Cat', 'Other']
+
+  // const handleCLicks
 
   const handleClick = () => {
     if (selectedImages.length >= 5) {
@@ -118,7 +122,9 @@ export const NewPetModal = (props: any) => {
           <Tooltip target=".custom-target-icon" position="top" event="both" />
 
           <div className="mt-5 flex flex-col md:flex-row">
-            <div className="flex flex-col basis-1/4 mr-5 justify-between">
+            <div
+              className="flex flex-col basis-1/4 mr-5 justify-between"
+              style={styles}>
               <div className="w-full">
                 <p>Categories</p>
                 <Dropdown
@@ -126,7 +132,6 @@ export const NewPetModal = (props: any) => {
                   value={category}
                   onChange={e => setCategory(e.value)}
                   options={categories}
-                  optionLabel="name"
                   placeholder="Select a Category"
                 />
               </div>
@@ -154,8 +159,7 @@ export const NewPetModal = (props: any) => {
                   value={status}
                   onChange={e => setStatus(e.value)}
                   options={statuses}
-                  optionLabel="name"
-                  placeholder="Not adopted"
+                  placeholder="Select a status"
                 />
               </div>
             </div>

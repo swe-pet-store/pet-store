@@ -2,29 +2,51 @@ import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import { ProfilePetCard } from './ProfileComponents/ProfilePetCard'
-import { ItemCarouselTemplate } from './HomeComponents/ItemCarouselTemplate'
+import ItemCarouselTemplate from './HomeComponents/ItemCarouselTemplate'
 import { Virtual, Pagination, Navigation } from 'swiper'
 import 'swiper/css/pagination'
 import { TestimonialCarouselTemplate } from './HomeComponents/TestimonialCarouselTemplate'
 import 'swiper/css/navigation'
-export const SwiperComponent = (props: { type: string; page: string }) => {
-  var sampleThing: number[] = [1, 1, 1, 11, 1, 1]
+import { ITestimonial } from 'interfaces/testimonialInterface'
+import { IItem } from 'interfaces/itemInterface'
+import { IPet } from 'interfaces/petInterface'
+export const SwiperComponent = (props: {
+  type: string
+  page: string
+  itemsToShow: IItem[] | ITestimonial[] | IPet[]
+}) => {
+  // var sampleThing: number[] = [1, 1, 1, 11, 1, 1]
 
-  const sampleItemObject = {
-    id: 1,
-    user_id: 1,
-    category_id: 1,
-    name: 'Memory Foam Dog Bed 1',
-    price: 20,
-    quantity: 2,
-    description: 'pet item 1',
-    state: 'new',
-    images: undefined,
-    created_at: 123,
-    last_updated_at: 125,
-    status: 'available',
-    discount: 0,
-  }
+  // const sampleItemObject = {
+  //   id: 1,
+  //   user_id: 1,
+  //   category: { id: 1, name: 'Dog' },
+  //   name: 'Memory Foam Dog Bed 1',
+  //   price: 20,
+  //   quantity: 2,
+  //   description: 'pet item 1',
+  //   state: 'new',
+  //   images: undefined,
+  //   created_at: 123,
+  //   last_updated_at: 125,
+  //   status: 'available',
+  //   discount: 0,
+  // }
+
+  // const petExample = {
+  //   id: 1
+  //   category_id: number
+  //   user_id: number
+  //   name: string
+  //   breed: string
+  //   description: string
+  //   images?: any
+  //   status: string
+  //   created_at: number
+  //   last_updated_at: number
+  //   age: number
+  //   facts: string
+  // }
 
   let spaceBetween = 0
   let slidesPerView = 0
@@ -88,15 +110,19 @@ export const SwiperComponent = (props: { type: string; page: string }) => {
       autoplay
       spaceBetween={spaceBetween}
       slidesPerView={slidesPerView}
-      breakpoints={breakPointObject}
-      onSlideChange={() => console.log('slide change')}
-      onSwiper={swiper => console.log(swiper)}>
-      {sampleThing.map((e, index) => {
+      breakpoints={breakPointObject}>
+      {props.itemsToShow.map((item: any, index: number) => {
         return (
-          <SwiperSlide className="" virtualIndex={index}>
-            {props.type === 'pets' && <ProfilePetCard key={index} />}
+          <SwiperSlide className="" virtualIndex={index} key={index}>
+            {props.type === 'pets' && (
+              <div className="mb-12 4xl:mr-12 mr-6">
+                {/* <ProfilePetCard  key={index} /> */}
+              </div>
+            )}
             {props.type === 'items' && (
-              <ItemCarouselTemplate item={sampleItemObject} key={index} />
+              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
+                <ItemCarouselTemplate item={item} />
+              </div>
             )}
             {props.type === 'testimonial' && (
               <TestimonialCarouselTemplate
@@ -108,7 +134,9 @@ export const SwiperComponent = (props: { type: string; page: string }) => {
               />
             )}
             {props.type === 'favorites' && (
-              <ItemCarouselTemplate item={sampleItemObject} liked={true} />
+              <div className="mb-24 4xl:mr-12 mr-6" key={index}>
+                <ItemCarouselTemplate item={item} liked={true} />
+              </div>
             )}
           </SwiperSlide>
         )

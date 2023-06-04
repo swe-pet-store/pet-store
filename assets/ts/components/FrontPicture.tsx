@@ -2,19 +2,25 @@ import React, { useRef, useState } from 'react'
 import blankPicture from './images/blank-picture-item-modal.svg'
 import { HiOutlineTrash } from 'react-icons/hi'
 
-export const FrontPicture = ({ title }: { title: string }) => {
+export const FrontPicture = ({
+  title,
+  editable,
+}: {
+  title?: string
+  editable?: boolean
+}) => {
   const [selectedFrontImage, setSelectedFrontImage] = useState<any | null>(null)
 
   const frontPictureInputRef = useRef<any>()
 
   const handleClick = () => {
-    frontPictureInputRef?.current?.click()
+    if (editable && editable !== undefined)
+      frontPictureInputRef?.current?.click()
   }
 
   const handleChange = (event: any) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFrontImage(event.target.files[0])
-      console.log(event.target.files[0])
     }
   }
 
@@ -30,7 +36,7 @@ export const FrontPicture = ({ title }: { title: string }) => {
         accept="image/*"
         className="hidden"
       />
-      <p className="mb-3">{title}</p>
+      {title && <p className="mb-3">{title}</p>}
       <div className="rounded-full justify-center items-center w-52 flex aspect-square relative">
         {selectedFrontImage && (
           <button

@@ -4,11 +4,11 @@ import { MenuHolder } from './MenuHolder'
 import { Sidebar } from 'primereact/sidebar'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { Image } from 'primereact/image'
-import searchImage from '../components/images/search-icon.png'
+import shoppingCart from '../components/images/shopping-cart.svg'
 import profileImage from '../components/images/profile-icon.png'
 import { Link } from 'react-router-dom'
 
-export const NavBar = ({}: {}) => {
+export const NavBar = ({ setShowCart }: { setShowCart: any }) => {
   const [visibleRight, setVisibleRight] = useState(false)
 
   return (
@@ -29,14 +29,16 @@ export const NavBar = ({}: {}) => {
           />
         </div>
 
-        <div className="md:flex md:justify-center items-center space-x-5 hidden mr-12">
-          <Link to={'/'} className="w-[35px] lg:w-[35px]">
+        <div className="md:flex md:justify-center items-center space-x-5 hidden mr-5 lg:mr-12">
+          <div
+            onClick={() => setShowCart(true)}
+            className="w-[45px] lg:w-[55px] cursor-pointer">
             <img
-              src={searchImage}
+              src={shoppingCart}
               alt="search"
               className="mix-blend-multiply"
             />
-          </Link>
+          </div>
           <Link to={'/login'} className="w-[45px] lg:w-[55px]">
             <img
               src={profileImage}
