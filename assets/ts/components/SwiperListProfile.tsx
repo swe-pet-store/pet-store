@@ -18,17 +18,36 @@ export const SwiperListProfile = (props: any) => {
 
   const [itemsToPass, setItemsToPass] = useState([])
   const likedItemIds = [2, 3, 5]
+  const userId = 2
 
   useEffect(() => {
-    if (props.type === 'items') {
-      axios.get(`/item/liked-items`, {params: { itemIds: likedItemIds.join(',') }})
+    if (props.type === 'favorites') {
+      axios
+        .get(`/item/liked-items`, {
+          params: { itemIds: likedItemIds.join(',') },
+        })
         .then(response => {
           console.log(response)
           setItemsToPass(response.data)
         })
         .catch(err => console.error(err))
-    } 
-
+    } else if (props.type === 'items') {
+      axios
+        .get(`/item/personal-items/${userId}`)
+        .then(response => {
+          console.log(response)
+          setItemsToPass(response.data)
+        })
+        .catch(err => console.error(err))
+    } else {
+      axios
+        .get(`/pet/personal-pets/${userId}`)
+        .then(response => {
+          console.log(response)
+          setItemsToPass(response.data)
+        })
+        .catch(err => console.error(err))
+    }
   }, [])
 
   return (
@@ -45,6 +64,8 @@ export const SwiperListProfile = (props: any) => {
           )}
         </div>
         <SwiperComponent
+          setItemVisible={setItemModalVisible}
+          setPetVisible={setPetModalVisible}
           itemsToShow={itemsToPass}
           type={props.type}
           page="Profile"

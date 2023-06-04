@@ -10,13 +10,20 @@ import 'swiper/css/navigation'
 import { ITestimonial } from 'interfaces/testimonialInterface'
 import { IItem } from 'interfaces/itemInterface'
 import { IPet } from 'interfaces/petInterface'
+import { Link } from 'react-router-dom'
+import { useBoundStore } from '../store/index'
+
 export const SwiperComponent = (props: {
   type: string
   page: string
   itemsToShow: IItem[] | ITestimonial[] | IPet[]
+  setItemVisible?: any
+  setPetVisible?: any
 }) => {
   let spaceBetween = 0
   let slidesPerView = 0
+
+  const store = useBoundStore()
 
   switch (props.type) {
     case 'pets':
@@ -58,6 +65,16 @@ export const SwiperComponent = (props: {
           },
         }
 
+  function handleClickPet(item: any) {
+    store.setDefaultModalItem(item)
+    props.setPetVisible(true)
+  }
+
+  function handleItemClick(item: any) {
+    store.setDefaultModalItem(item)
+    props.setItemVisible(true)
+  }
+
   return (
     <Swiper
       pagination={{
@@ -81,13 +98,25 @@ export const SwiperComponent = (props: {
         return (
           <SwiperSlide className="" virtualIndex={index} key={index}>
             {props.type === 'pets' && (
-              <div className="mb-12 4xl:mr-12 mr-6">
-                {/* <ProfilePetCard  key={index} /> */}
+              <div
+                className="mb-12 4xl:mr-12 mr-6"
+                onClick={() => handleClickPet(item)}>
+                <ProfilePetCard pet={item} key={index} />
               </div>
             )}
-            {props.type === 'items' && (
-              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
+            {props.type === 'items' && props.page === 'Profile' && (
+              <div
+                className="mb-12 4xl:mr-12 mr-6"
+                key={index}
+                onClick={() => handleItemClick(item)}>
                 <ItemCarouselTemplate item={item} />
+              </div>
+            )}
+            {props.type === 'items' && props.page === 'Home' && (
+              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
+                <Link to={`/item/${item.id}`}>
+                  <ItemCarouselTemplate item={item} />
+                </Link>
               </div>
             )}
             {props.type === 'testimonial' && (

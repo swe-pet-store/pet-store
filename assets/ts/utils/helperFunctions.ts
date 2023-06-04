@@ -25,6 +25,45 @@ export function blobToBase64(blob: Blob) {
   })
 }
 
+export function base64ToBlob(base64String: string, contentType: any) {
+  const byteCharacters = atob(base64String)
+  const byteArrays = []
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+    const slice = byteCharacters.slice(offset, offset + 1024)
+
+    const byteNumbers = new Array(slice.length)
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i)
+    }
+
+    const byteArray = new Uint8Array(byteNumbers)
+    byteArrays.push(byteArray)
+  }
+
+  return new Blob(byteArrays, { type: contentType })
+}
+
+export function base64ArrayToBlobArray(
+  base64Array: string | any[],
+  contentType: any,
+) {
+  const blobArray: never[] = []
+  for (let i = 0; i < base64Array.length; i++) {
+    try {
+      console.log(base64Array[i])
+      // const blob = base64ToBlob(base64Array[i], contentType)
+      // blobArray.push(blob)
+    } catch (error) {
+      console.error(
+        `Error converting Base64 string to Blob at index ${i}:`,
+        error,
+      )
+    }
+  }
+  return blobArray
+}
+
 export const showWarningToast = (toast: any) => {
   toast.current!.show({
     severity: 'warn',

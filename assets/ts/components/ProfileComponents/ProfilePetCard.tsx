@@ -6,9 +6,7 @@ import { Link } from 'react-router-dom'
 
 export const ProfilePetCard = ({ pet }: { pet: IPet }) => {
   return (
-    <Link
-      to={`/pet/${pet.id}`}
-      className=" flex flex-col justify-center items-center shadow-xl rounded-xl bg-white">
+    <div className=" flex flex-col justify-center items-center shadow-xl rounded-xl bg-white">
       <div className="w-full h-[200px] xl:h-[250px] 2xl:h-fit 5xl:h-fit rounded-t-xl overflow-hidden">
         <img src={dog} className="w-full h-full object-cover object-center" />
       </div>
@@ -17,6 +15,6 @@ export const ProfilePetCard = ({ pet }: { pet: IPet }) => {
       <div className="flex self-end">
         <Badge />
       </div>
-    </Link>
+    </div>
   )
 }
