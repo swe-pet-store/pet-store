@@ -21,7 +21,6 @@ export const PersonalInfo = ({
 }: IPersonalInfo) => {
   function handleInputNumberChange(event: any) {
     if (event.target.value.length <= 13) {
-      console.log(event.target.value.length)
       handlePhoneNumber(event.target.value)
     }
   }

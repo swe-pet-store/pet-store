@@ -11,7 +11,8 @@ import { Toast } from 'primereact/toast'
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
 import {
-  blobsToBase64, blobToBase64,
+  blobsToBase64,
+  blobToBase64,
   showErrorToast,
   showProcessingToast,
   showSuccessToast,
@@ -84,29 +85,31 @@ export const NewPetModal = (props: any) => {
 
     blobsToBase64(selectedImages).then(base64Array => {
       blobToBase64(selectedFrontImage)
-          .then(frontImage64 => {
-            const bodyForm = {
-              category: category,
-              name: name,
-              breed: breed,
-              status: status,
-              description: description,
-              facts: facts,
-              images: base64Array,
-              frontImage: frontImage64
-            }
+        .then(frontImage64 => {
+          const bodyForm = {
+            category: category,
+            name: name,
+            breed: breed,
+            status: status,
+            description: description,
+            facts: facts,
+            images: base64Array,
+            frontImage: frontImage64,
+          }
 
-            axios.post('/pet/add-pet', bodyForm).then(response => {
-              setDisabled(false)
-              showSuccessToast(toast)
-              props.setVisible(false)
-            })
+          axios.post('/pet/add-pet', bodyForm).then(response => {
+            setDisabled(false)
+            showSuccessToast(
+              toast,
+              'You have successfully added this pet to your page',
+            )
+            props.setVisible(false)
           })
+        })
 
-          .catch(err => showErrorToast(toast, err.message))
+        .catch(err => showErrorToast(toast, err.message))
     })
   }
-
 
   return (
     <>

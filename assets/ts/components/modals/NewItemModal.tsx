@@ -52,9 +52,6 @@ export const NewItemModal = (props: any) => {
   const [disabled, setDisabled] = useState(false)
 
   useEffect(() => {
-    console.log(defaults !== undefined)
-    console.log(defaults.hasOwnProperty('name'))
-
     if (defaults !== undefined && defaults.hasOwnProperty('name')) {
       setCategory(categoryTranslator(defaults.category.id))
       setQuantity(defaults.quantity.toString())
@@ -100,24 +97,26 @@ export const NewItemModal = (props: any) => {
       setDisabled(false)
       return
     }
-
-
-      blobToBase64(selectedFrontImage).then( frontImage64 => {
-      const bodyForm = {
-        category: category.name,
-        quantity: quantity,
-        price: price,
-        name: name,
-        description: description,
-        state: itemState,
-        images:base64Array,
-        frontImage:frontImage64
-      }
-
-
-          axios.post('/item/add-item', bodyForm).then(response => {
+    blobsToBase64(selectedImages).then(base64Array => {
+      blobToBase64(selectedFrontImage).then(frontImage64 => {
+        const bodyForm = {
+          category: category.name,
+          quantity: quantity,
+          price: price,
+          name: name,
+          description: description,
+          state: itemState,
+          images: base64Array,
+          frontImage: frontImage64,
+        }
+        axios
+          .post('/item/add-item', bodyForm)
+          .then(response => {
             setDisabled(false)
-            showSuccessToast(toast)
+            showSuccessToast(
+              toast,
+              'You have successfully added this item to your page',
+            )
             props.setVisible(false)
           })
           .catch(err => showErrorToast(toast, err.message))

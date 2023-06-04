@@ -27,7 +27,6 @@ export const SwiperListProfile = (props: any) => {
           params: { itemIds: likedItemIds.join(',') },
         })
         .then(response => {
-          console.log(response)
           setItemsToPass(response.data)
         })
         .catch(err => console.error(err))
@@ -35,7 +34,6 @@ export const SwiperListProfile = (props: any) => {
       axios
         .get(`/item/personal-items/${userId}`)
         .then(response => {
-          console.log(response)
           setItemsToPass(response.data)
         })
         .catch(err => console.error(err))
@@ -43,7 +41,6 @@ export const SwiperListProfile = (props: any) => {
       axios
         .get(`/pet/personal-pets/${userId}`)
         .then(response => {
-          console.log(response)
           setItemsToPass(response.data)
         })
         .catch(err => console.error(err))

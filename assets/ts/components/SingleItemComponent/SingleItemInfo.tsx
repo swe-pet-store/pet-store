@@ -1,8 +1,11 @@
 import { IItem } from 'interfaces/itemInterface'
 import { Dropdown } from 'primereact/dropdown'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
+import { useBoundStore } from '../../store/index'
+import { Toast } from 'primereact/toast'
+import { showSuccessToast } from '../../utils/helperFunctions'
 
 export const SingleItemInfo = (props: IItem) => {
   const [liked, setLiked] = useState<boolean>()
@@ -10,7 +13,9 @@ export const SingleItemInfo = (props: IItem) => {
   const quantMax = Array.from(Array(props.quantity).keys())
 
   const [quantitySelected, setQuantitySelected] = useState<number>(1)
-
+  const toastRef = useRef<any>()
+  const store = useBoundStore()
+  console.log(props.images)
   return (
     <>
       <span className="flex items-center">
@@ -39,13 +44,13 @@ export const SingleItemInfo = (props: IItem) => {
             className="text-3xl w-20 mt-3"
             value={quantitySelected}
             onChange={e => {
-              console.log(props.quantity)
-              console.log(e.value < props.quantity)
               if (e.value < props.quantity) setQuantitySelected(e.value)
               else setQuantitySelected(props.quantity)
             }}
             options={quantMax}
-            // placeholder=""
+            placeholder={'1'}
+            min={1}
+            max={props.quantity}
           />
         </span>
         <span>
@@ -57,10 +62,23 @@ export const SingleItemInfo = (props: IItem) => {
         </span>
       </div>
       <div className="w-3/4 flex items-center justify-center mt-10">
-        <button className="bg-themeYellow-400 text-2xl font-semibold text-center px-12 py-3 rounded-full">
+        <button
+          className="bg-themeYellow-400 text-2xl font-semibold text-center px-12 py-3 rounded-full"
+          onClick={() => {
+            store.addShoppingCartItem({
+              id: props.id,
+              description: props.description,
+              itemImg: props.images[0],
+              quantity: quantitySelected,
+              title: props.name,
+              price: props.price,
+            })
+            showSuccessToast(toastRef, 'Item added to cart')
+          }}>
           Add To Basket
         </button>
       </div>
+      <Toast ref={toastRef} />
     </>
   )
 }
