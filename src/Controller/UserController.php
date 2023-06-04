@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\RefreshToken;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @Route("/api", name="api_")
@@ -87,5 +89,18 @@ class UserController extends AbstractController
         return $this->json(['token' => $token]);
         //redirect user to homepage
 //        return $this->redirect($this->generateUrl('api_register'));
+    }
+    #[Route('/logout', name: 'app_logout', methods: ['POST'])]
+    public function logout(TokenInterface $token, EntityManagerInterface $entityManager): Response
+    {
+        $auth_user = $token->getUser();
+        if($auth_user == null){
+            return new Response("error");
+        }
+        $refresh_token = $entityManager->getRepository(RefreshToken::class)->findBy(['username'=> $auth_user->getUserIdentifier()]);
+        $entityManager->remove((object)$refresh_token);
+        $entityManager->flush();
+
+        return new Response("user logged out");
     }
 }

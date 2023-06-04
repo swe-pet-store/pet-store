@@ -37,6 +37,10 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        main:
+            logout:
+                path: api_app_logout
+                target: /login
         login:
             pattern: ^/api/login
             stateless: true
@@ -46,16 +50,7 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            logout:
-                path : /logout
 
-
-#        refresh_token:
-#            pattern: ^/api/token/refresh
-#            stateless: true
-#            refresh_jwt:
-#                # The corresponding route has been declared by the recipe
-#                check_path: /api/token/refresh
 
         api:
             pattern:   ^/profile
