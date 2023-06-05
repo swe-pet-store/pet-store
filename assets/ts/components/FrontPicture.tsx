@@ -55,9 +55,11 @@ export const FrontPicture = ({
             selectedFrontImage === null && 'bg-[#D9D9D9] object-scale-down'
           }  h-full w-full rounded-full`}
           src={
-            selectedFrontImage !== null
+            selectedFrontImage === null
+              ? blankPicture
+              : selectedFrontImage instanceof Object
               ? URL.createObjectURL(selectedFrontImage)
-              : blankPicture
+              : selectedFrontImage
           }
           onClick={handleClick}
         />

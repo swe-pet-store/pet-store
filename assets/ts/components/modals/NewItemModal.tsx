@@ -52,15 +52,22 @@ export const NewItemModal = (props: any) => {
   const [disabled, setDisabled] = useState(false)
 
   useEffect(() => {
-    if (defaults !== undefined && defaults.hasOwnProperty('name')) {
+    if (
+      defaults !== undefined &&
+      defaults.hasOwnProperty('name') &&
+      props.visible
+    ) {
       setCategory(categoryTranslator(defaults.category.id))
-      setQuantity(defaults.quantity.toString())
+      setQuantity(defaults.quantity?.toString())
       setPrice(defaults.price.toString())
       setName(defaults.name)
       setItemState(defaults.state)
       setDescription(defaults.description)
       setDiscount(defaults.discount.toString())
-      setSelectedImages(JSON.parse(defaults.images))
+      if (defaults.images !== null) {
+        setSelectedImages(defaults.images)
+        setSelectedFrontImage(defaults.images[0])
+      }
     }
   }, [defaults])
 

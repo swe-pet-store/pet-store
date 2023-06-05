@@ -17,14 +17,17 @@ export const SwiperListProfile = (props: any) => {
     props.type === 'pets' ? setPetModalVisible : setItemModalVisible
 
   const [itemsToPass, setItemsToPass] = useState([])
-  const likedItemIds = [2, 3, 5]
-  const userId = 2
+
+  const user: any = JSON.parse(localStorage.getItem('userData')!)
+
+  const likedItemIds = user.likedItems
+  const userId = user.id
 
   useEffect(() => {
     if (props.type === 'favorites') {
       axios
         .get(`/item/liked-items`, {
-          params: { itemIds: likedItemIds.join(',') },
+          params: { itemIds: likedItemIds },
         })
         .then(response => {
           setItemsToPass(response.data)

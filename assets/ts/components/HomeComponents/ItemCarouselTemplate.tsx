@@ -17,7 +17,7 @@ const ItemCarouselTemplate = ({ item, liked }: ItemInterface) => {
     <div className="bg-white rounded-2xl shadow-md lg:shadow-xl h-full justify-between flex flex-col pb-3 ">
       <div className="w-full rounded-t-xl overflow-hidden">
         <img
-          src={memoryFoam}
+          src={item.images[0]}
           className="w-full h-full object-cover object-center shadow-2"
         />
       </div>

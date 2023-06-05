@@ -6,6 +6,7 @@ import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
 import { useBoundStore } from '../../store/index'
 import { Toast } from 'primereact/toast'
 import { showSuccessToast } from '../../utils/helperFunctions'
+import axios from 'axios'
 
 export const SingleItemInfo = (props: IItem) => {
   const [liked, setLiked] = useState<boolean>()
@@ -15,7 +16,13 @@ export const SingleItemInfo = (props: IItem) => {
   const [quantitySelected, setQuantitySelected] = useState<number>(1)
   const toastRef = useRef<any>()
   const store = useBoundStore()
-  console.log(props.images)
+
+  // const user: any = localStorage.getItem('userData')
+  // console.log(user)
+  const user: any = JSON.parse(localStorage.getItem('userData')!)
+
+  const userId = user ? user?.id : null
+
   return (
     <>
       <span className="flex items-center">
@@ -65,14 +72,17 @@ export const SingleItemInfo = (props: IItem) => {
         <button
           className="bg-themeYellow-400 text-2xl font-semibold text-center px-12 py-3 rounded-full"
           onClick={() => {
-            store.addShoppingCartItem({
-              id: props.id,
-              description: props.description,
-              itemImg: props.images[0],
+            const bodyToPass = {
+              userId: userId,
+              itemId: props.id,
               quantity: quantitySelected,
-              title: props.name,
-              price: props.price,
-            })
+            }
+            axios
+              .post('/cart/add-order', bodyToPass)
+              .then(res => {
+                store.addShoppingCartItem({ order: res.data })
+              })
+              .catch(err => console.error(err))
             showSuccessToast(toastRef, 'Item added to cart')
           }}>
           Add To Basket
