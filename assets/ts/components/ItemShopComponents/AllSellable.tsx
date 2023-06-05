@@ -42,7 +42,11 @@ export const AllSellable = ({
           .map((element: IItem & IPet, index: React.Key | null | undefined) => {
             return (
               <div className="w-[90%] sm:w-[45%] lg:w-[30%]" key={index}>
-                {type === 'item' && <ItemCarouselTemplate item={element} />}
+                {type === 'item' && (
+                  <Link to={`/item/${element.id}`}>
+                    <ItemCarouselTemplate item={element} />
+                  </Link>
+                )}
                 {type === 'pet' && (
                   <Link to={`/pet/${element.id}`}>
                     <ProfilePetCard pet={element} key={index} />

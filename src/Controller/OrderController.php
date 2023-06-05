@@ -34,53 +34,67 @@ class OrderController extends AbstractController
 
 
     /**
-     * @Route("/cart/add-order", name="app_add_order", methods={"GET"})
+     * @Route("/cart/add-order", name="app_add_order", methods={"POST"})
      *
      */
     public function addOrder(Request $request, SerializerInterface $serializer){
-        try {
-            $userId = 1;
-            $itemId = 12;
+        // try {
+            $data = $request->getContent();
+            $data = json_decode($data, true);      
+            $userId = $data['userId'];
+            $itemId = $data['itemId'];
+            $quantity = $data['quantity'];            
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
             $item = $this->entityManager->getRepository(Item::class)->findOneBy(['id' => $itemId]);
-            $quantityToBePurchased = 3;
             $order = $this->orderRepository->findOneSpecificOrder($userId, $itemId);
             if (count($order) == 0) {
                 $newOrder = new Order();
                 $newOrder->setUser($user);
                 $newOrder->setItem($item);
-                $newOrder->setQuantity($quantityToBePurchased);
+                $newOrder->setQuantity($quantity);
                 $newOrder->setProcessed(0);
                 $this->entityManager->persist($newOrder);
                 $this->entityManager->flush();
-                return $this->json('added');
+                $serialized = $serializer->serialize(
+                    $newOrder,"json",[
+                        'groups'=> 'order'
+                    ]
+                );
+                return new JsonResponse($serialized,200,[],true);
             } else{
                 $order = $this->orderRepository->findOneBy(['id'=> $order[0]->getId()]);
                 $currentQuantity = $order->getQuantity();
-                $order->setQuantity($currentQuantity + $quantityToBePurchased);
+                $order->setQuantity($currentQuantity + $quantity);
                 $this->entityManager->persist($order);
                 $this->entityManager->flush();
-                return $this->json('updated');
+                $serialized = $serializer->serialize(
+                    $order,"json",[
+                        'groups'=> 'order'
+                    ]
+                );
+                return new JsonResponse($serialized,200,[],true);
             }
 
-        }catch (\Exception $e){
-            return $this->json('failure');
-        }
+        // }catch (\Exception $e){
+        //     return $this->json('failure');
+        // }
     }
 
     /**
-     * @Route("/cart/orders", name="app_user_orders", methods={"GET"})
+     * @Route("/cart/orders/{userId}", name="app_user_orders", methods={"GET"})
      *
      */
-    public function getShoppingCart(Request $request, SerializerInterface $serializer){
+    public function getShoppingCart(Request $request, SerializerInterface $serializer, $userId){
         try{
-            $userId = 1;
+            // $userId = $request->query->get('userId');
+            dump($userId);
             $orders = $this->orderRepository->findUserOrders($userId);
             $serialized = $serializer->serialize(
                 $orders,"json",[
                     'groups'=> 'order'
                 ]
             );
+            dump($serialized);
             return new JsonResponse($serialized,200,[],true);
         }catch (\Exception $e){
             return $this->json('nope');
@@ -88,12 +102,11 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/cart/purchase-items", name="app_purchase_orders", methods={"GET"})
+     * @Route("/cart/purchase-items/{userId}", name="app_purchase_orders", methods={"POST"})
      *
      */
-    public function purchaseItems(Request $request){
-        try{
-            $userId = 1;
+    public function purchaseItems(Request $request, $userId){
+            // $userId = 1;
             $orders = $this->orderRepository->findUserOrders($userId);
             foreach($orders as $order){
                 $quantity = $order['order']->getQuantity();
@@ -107,18 +120,17 @@ class OrderController extends AbstractController
                 $this->entityManager->flush();
             }
             return $this->json('purchased');
-        }catch (\Exception $e){
-            return $this->json('not purchased');
-        }
     }
 
     /**
-     * @Route("/cart/delete-order", name="app_delete_order", methods={"GET"})
+     * @Route("/cart/delete-order/{orderId}", name="app_delete_order", methods={"POST"})
      *
      */
-    public function deleteOrder(Request $request){
+    public function deleteOrder(Request $request, $orderId){
         try{
-            $orderId = 2;
+            // $orderId = $request->query->get('orderId');
+
+            dump($orderId);
             $order = $this->orderRepository->findOneBy(['id'=> $orderId]);
             $this->orderRepository->remove($order,true);
             return $this->json('deleted');

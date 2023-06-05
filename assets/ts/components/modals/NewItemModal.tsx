@@ -65,7 +65,6 @@ export const NewItemModal = (props: any) => {
       setDescription(defaults.description)
       setDiscount(defaults.discount.toString())
       if (defaults.images !== null) {
-        console.log(defaults.images)
         setSelectedImages(defaults.images)
         setSelectedFrontImage(defaults.images[0])
       }

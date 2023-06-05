@@ -7,6 +7,7 @@ import {
 //@ts-ignore
 import styles from '../../styles/shoppingcart.css'
 import { useBoundStore } from '../store/index'
+import axios from 'axios'
 
 interface IShoppingCartItem {
   id: number
@@ -66,6 +67,10 @@ export const ShoppingCartItem = ({
         <button
           onClick={() => {
             store.removeShoppingCartItem(id)
+            axios
+              .post(`/cart/delete-order/${id}`)
+              .then(res => console.log(res.data))
+              .catch(err => console.error(err))
           }}
           className=" px-2 py-2 rounded-xl border-[#D55353] border text-white font-medium ">
           <img src={trash} />

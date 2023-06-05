@@ -24,7 +24,6 @@ export const ProfilePage = () => {
         setUserData(response.data)
         localStorage.setItem('userData', JSON.stringify(response.data[0]))
       } catch (error) {
-        console.log(error)
         // @ts-ignore
         if (error.response.status === 401) {
           const refresh_token = localStorage.getItem('refresh_token')

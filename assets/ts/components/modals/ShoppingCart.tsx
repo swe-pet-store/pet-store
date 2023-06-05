@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dialog } from 'primereact/dialog'
 import itemImg from '../images/memory-foam-item.png'
 import { Toast } from 'primereact/toast'
 import { ShoppingCartItem } from '../../components/ShoppingCartItem'
 import { useBoundStore } from '../../store/index'
+import axios from 'axios'
+import { showSuccessToast } from '../../utils/helperFunctions'
 
 export const ShoppingCart = (props: any) => {
   const toast = useRef<any>()
@@ -55,10 +57,23 @@ export const ShoppingCart = (props: any) => {
   // ]
 
   const store = useBoundStore()
+  const user: any = JSON.parse(localStorage.getItem('userData')!)
+
+  const userId: number | null = user ? user?.id : null
+
+  useEffect(() => {
+    if (Object.keys(store.shoppingCart).length === 0)
+      axios
+        .get(`/cart/orders/${userId}`)
+        .then(res => {
+          console.log(res)
+          store.shoppingCart = res.data
+        })
+        .catch(err => console.error(err))
+  }, [])
 
   const cartObjects = store.shoppingCart
 
-  console.log('cartObjects:')
   console.log(cartObjects)
 
   return (
@@ -76,33 +91,39 @@ export const ShoppingCart = (props: any) => {
             <p className="col-span-2 text-lg">Quantity</p>
             <p className="col-span-1 text-lg">Price</p>
           </div>
-          <div className="h-[50vh] overflow-x-hidden overflow-y-scroll mb-10">
-            {cartObjects.map(
-              (
-                shopItem: {
-                  id: number
-                  description: string
-                  itemImg: any
-                  quantity: number
-                  title: string
-                  price: number
-                },
-                idx: number,
-              ) => (
+          <div className="h-[50vh] overflow-x-hidden overflow-y-scroll mb-10 relative">
+            {cartObjects.length !== 0 ? (
+              cartObjects.map((obj: any, idx: number) => (
                 <ShoppingCartItem
-                  id={shopItem.id}
-                  description={shopItem.description}
-                  itemImg={shopItem.itemImg}
-                  quantity={shopItem.quantity}
-                  title={shopItem.title}
-                  price={shopItem.price}
+                  id={obj.order.id}
+                  description={obj.order.item.description}
+                  itemImg={obj.order.item.images[0]}
+                  quantity={obj.order.quantity}
+                  title={obj.order.item.title}
+                  price={obj.order.item.price}
                   key={idx}
                 />
-              ),
+              ))
+            ) : (
+              <p className="text-3xl mt-32 ml-48 opacity-60 font-bold">
+                NO ITEMS IN CART
+              </p>
             )}
           </div>
           <span className="flex justify-end">
-            <button className="px-7 py-3 bg-themeGreen ">
+            <button
+              onClick={() => {
+                axios
+                  .post(`/cart/purchase-items/${userId}`)
+                  .then(res => {
+                    store.shoppingCart = []
+                    showSuccessToast(toast, 'purchased successfully')
+                    props.setVisible(false)
+                  })
+                  .catch(err => console.error(err))
+              }}
+              className="px-7 py-3 bg-themeGreen "
+              disabled={cartObjects.length === 0}>
               <p className="font-medium text-3xl text-black opacity-100">
                 CHECKOUT
               </p>
