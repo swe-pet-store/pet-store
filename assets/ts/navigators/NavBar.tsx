@@ -10,7 +10,9 @@ import { Link } from 'react-router-dom'
 
 export const NavBar = ({ setShowCart }: { setShowCart: any }) => {
   const [visibleRight, setVisibleRight] = useState(false)
-
+  const profileImagePath = localStorage.getItem('userData')
+    ? '/profile'
+    : '/login'
   return (
     <>
       <div className={`flex items-center justify-between self-center mx-12 `}>
@@ -39,7 +41,7 @@ export const NavBar = ({ setShowCart }: { setShowCart: any }) => {
               className="mix-blend-multiply"
             />
           </div>
-          <Link to={'/login'} className="w-[45px] lg:w-[55px]">
+          <Link to={profileImagePath} className="w-[45px] lg:w-[55px]">
             <img
               src={profileImage}
               alt="profile"

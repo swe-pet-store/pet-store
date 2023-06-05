@@ -2,14 +2,20 @@ import React, { useState, useRef } from 'react'
 import { PersonalInfo } from './PersonalInfo'
 import duck from '../../components/images/duck.png'
 import { FrontPicture } from '../../components/FrontPicture'
-import axios from "axios";
-export const AboutMe = ({initialEmail = ""}) => {
+import axios from 'axios'
+export const AboutMe = ({
+  initialEmail = '',
+  userData,
+}: {
+  initialEmail: string
+  userData: any
+}) => {
   const [buttonToggle, setButtonToggle] = useState<boolean>(false)
-  const [name, setName] = useState('DUCKINHO')
-  const [email, setEmail] = useState('duckemail@gmail.com')
-  const [phoneNumber, setPhoneNumber] = useState('+355676202133')
+  const [name, setName] = useState(userData?.name)
+  const [email, setEmail] = useState(userData?.email)
+  const [phoneNumber, setPhoneNumber] = useState(userData?.phoneNumber)
   const [personalDescription, setPersonalDescription] = useState<string>(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.',
+    userData?.description,
   )
 
   const [selectedFrontImage, setSelectedFrontImage] = useState<null | any>(null)
@@ -21,16 +27,24 @@ export const AboutMe = ({initialEmail = ""}) => {
       <div className="flex lg:flex-col flex-col sm:flex-row justify-around  lg:justify-start lg:items-center mb-14 ">
         <div className="flex flex-col items-center justify-center">
           <button
-              onClick={() => {
-                setButtonToggle(e => {
-                  if(e)
-                    axios.put('api/edit-user', {name: name, email:email, phoneNumber:phoneNumber, personalDescription: personalDescription, initialEmail: initialEmail}).then(r => console.log(r))
-                  return !e
-                })
-              }}
-              className={`${
-                  buttonToggle ? 'bg-themeGreen' : 'bg-themeBrown-400'
-              } w-20 h-10 md:w-28 md:h-14 rounded-2xl text-2xl self-start mb-8`}>
+            onClick={() => {
+              setButtonToggle(e => {
+                if (e)
+                  axios
+                    .put('api/edit-user', {
+                      name: name,
+                      email: email,
+                      phoneNumber: phoneNumber,
+                      personalDescription: personalDescription,
+                      initialEmail: initialEmail,
+                    })
+                    .then(r => console.log(r))
+                return !e
+              })
+            }}
+            className={`${
+              buttonToggle ? 'bg-themeGreen' : 'bg-themeBrown-400'
+            } w-20 h-10 md:w-28 md:h-14 rounded-2xl text-2xl self-start mb-8`}>
             {buttonToggle ? 'Save' : 'Edit'}
           </button>
           {/* <img
@@ -56,7 +70,9 @@ export const AboutMe = ({initialEmail = ""}) => {
           <p className="font-medium text-4xl lg:mt-7 mb-7 ">About me!</p>
           <textarea
             value={personalDescription}
-            rows={Math.ceil(personalDescription.length / 20)}
+            rows={Math.ceil(
+              personalDescription ? personalDescription?.length / 20 : 4,
+            )}
             placeholder="A brief description here"
             onChange={e => {
               if (e.target.value.length <= 310)

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { ImageUploadHolder } from '../ImageUploadHolder'
 import { FrontPicture } from '../FrontPicture'
@@ -13,10 +13,12 @@ import axios from 'axios'
 import {
   blobsToBase64,
   blobToBase64,
+  categoryTranslator,
   showErrorToast,
   showProcessingToast,
   showSuccessToast,
 } from '../../utils/helperFunctions'
+import { useBoundStore } from '../../store/index'
 
 export const NewPetModal = (props: any) => {
   const toast = useRef<any>()
@@ -28,7 +30,8 @@ export const NewPetModal = (props: any) => {
       detail: 'You can only add up to 5 additional images per item',
     })
   }
-
+  const store = useBoundStore()
+  const defaults = store.defaultModalItem
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
   const [selectedFrontImage, setSelectedFrontImage] = useState<null | any>(null)
@@ -57,6 +60,25 @@ export const NewPetModal = (props: any) => {
     }
     hiddenImageInput?.current?.click()
   }
+
+  useEffect(() => {
+    if (
+      defaults !== undefined &&
+      defaults.hasOwnProperty('name') &&
+      props.visible
+    ) {
+      setCategory(categoryTranslator(defaults.category.id))
+      setName(defaults.name)
+      setBreed(defaults.breed)
+      setStatus(defaults.status)
+      setDescription(defaults.description)
+      setFacts(defaults.facts)
+      if (defaults.images !== null) {
+        setSelectedImages(JSON.parse(defaults.images))
+        setSelectedFrontImage(JSON.parse(defaults.images)[0])
+      }
+    }
+  }, [defaults])
 
   const handleChange = (event: any) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -87,6 +109,7 @@ export const NewPetModal = (props: any) => {
       blobToBase64(selectedFrontImage)
         .then(frontImage64 => {
           const bodyForm = {
+            // id: defaults ? id : null,
             category: category,
             name: name,
             breed: breed,
@@ -117,7 +140,10 @@ export const NewPetModal = (props: any) => {
       <Dialog
         visible={props.visible}
         className=" xsm:w-full sm:w-2/3 xl:w-1/2 "
-        onHide={() => props.setVisible(false)}>
+        onHide={() => {
+          props.setVisible(false)
+          store.setDefaultModalItem({})
+        }}>
         <div className="flex flex-col mx-0 md:mx-5 font-medium text-lg ">
           <div className="flex flex-col md:flex-row w-full items-center">
             <FrontPicture
@@ -164,7 +190,10 @@ export const NewPetModal = (props: any) => {
                   value={category}
                   onChange={e => setCategory(e.value)}
                   options={categories}
-                  placeholder="Select a Category"
+                  placeholder={
+                    defaults?.category?.name.charAt(0).toUpperCase() +
+                      defaults?.category?.name.slice(1) || 'Select a Category'
+                  }
                 />
               </div>
               <div className="w-full">
@@ -191,7 +220,12 @@ export const NewPetModal = (props: any) => {
                   value={status}
                   onChange={e => setStatus(e.value)}
                   options={statuses}
-                  placeholder="Select a status"
+                  placeholder={
+                    defaults?.state
+                      ?.replace(/_/g, ' ')
+                      .replace(/\b\w/g, (c: string) => c.toUpperCase()) ||
+                    'Select a status'
+                  }
                 />
               </div>
             </div>
