@@ -5,6 +5,8 @@ lexik_jwt_authentication:
     pass_phrase: 'token'
     token_ttl: 3600
 
+    user_identity_field: email
+
 when@dev:
     lexik_jwt_authentication:
         token_ttl: 43200 # 12h
