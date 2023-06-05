@@ -148,29 +148,21 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('/edit-user', name: 'user_edit', methods: ['PATCH'])]
+    #[Route('/edit-user', name: 'user_edit', methods: ['PUT'])]
     public function edit_user(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): \Symfony\Component\HttpFoundation\JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $user = $userRepository->find($data['id']);
+        $initialEmail = $data['initialEmail']['email'];
+        $user = $userRepository->findOneBy(['email'=> $initialEmail]);
+
         $name = $data['name'];
-        $surname = $data['surname'];
         $email = $data['email'];
-        $pass = $data['password'];
-        $phone_nr = $data['phone_number'];
-        $liked_items = $data['liked_items'];
-        $address = $data['address'];
-        $desc = $data['description'];
+        $phone_nr = $data['phoneNumber'];
+        $desc = $data['personalDescription'];
 
         $user->setDescription($desc);
-        $user->setLikedItems($liked_items);
         $user->setName($name);
-        $user->setPassword(
-            $passwordHasher->hashPassword($user, $pass)
-        );
-        $user->setSurname($surname);
         $user->setPhoneNumber($phone_nr);
-        $user->setAddress($address);
         $user->setEmail($email);
 
         $entityManager->flush();
