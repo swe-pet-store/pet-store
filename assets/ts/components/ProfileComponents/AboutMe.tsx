@@ -54,7 +54,6 @@ export const AboutMe = () => {
             rows={Math.ceil(personalDescription.length / 20)}
             placeholder="A brief description here"
             onChange={e => {
-              console.log(e.target.value.length)
               if (e.target.value.length <= 310)
                 setPersonalDescription(e.target.value)
             }}

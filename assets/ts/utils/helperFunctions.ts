@@ -51,7 +51,6 @@ export function base64ArrayToBlobArray(
   const blobArray: never[] = []
   for (let i = 0; i < base64Array.length; i++) {
     try {
-      console.log(base64Array[i])
       // const blob = base64ToBlob(base64Array[i], contentType)
       // blobArray.push(blob)
     } catch (error) {
@@ -81,11 +80,11 @@ export const showErrorToast = (toast: any, err: any) => {
   })
 }
 
-export const showSuccessToast = (toast: any) => {
+export const showSuccessToast = (toast: any, toastDetail: string) => {
   toast.current!.show({
     severity: 'success',
     summary: 'Success',
-    detail: 'You have successfully added this item to your page',
+    detail: toastDetail,
   })
 }
 

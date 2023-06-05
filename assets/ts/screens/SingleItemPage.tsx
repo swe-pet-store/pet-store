@@ -8,8 +8,6 @@ import axios from 'axios'
 export const SingleItemPage = () => {
   const { id } = useParams()
 
-  console.log(id)
-
   const [responseInfo, setResponseInfo] = useState<any>()
 
   useEffect(() => {
@@ -18,7 +16,6 @@ export const SingleItemPage = () => {
     })
   }, [])
 
-  console.log(responseInfo)
   // const title = `Memory Foam Dog Bed`
   // const desc = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
   if (!responseInfo) return <div></div>
@@ -26,7 +23,10 @@ export const SingleItemPage = () => {
     <>
       <div className="flex mx-10 flex-row mt-24 mb-32">
         <div className="basis-1/2 ml-14 ">
-          <img src={randImage} className="w-11/12 object-contain object-left" />
+          <img
+            src={responseInfo.images[0]}
+            className="w-11/12 object-contain object-left"
+          />
         </div>
         <div className="basis-1/2 mr-32">
           <SingleItemInfo
@@ -34,7 +34,7 @@ export const SingleItemPage = () => {
             created_at={responseInfo.created_at}
             description={responseInfo.description}
             id={responseInfo.id}
-            images={null}
+            images={responseInfo.images}
             last_updated_at={responseInfo.last_updated_at}
             name={responseInfo.name}
             price={responseInfo.price}
