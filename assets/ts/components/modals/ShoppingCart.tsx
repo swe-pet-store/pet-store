@@ -3,6 +3,7 @@ import { Dialog } from 'primereact/dialog'
 import itemImg from '../images/memory-foam-item.png'
 import { Toast } from 'primereact/toast'
 import { ShoppingCartItem } from '../../components/ShoppingCartItem'
+import { useBoundStore } from '../../store/index'
 
 export const ShoppingCart = (props: any) => {
   const toast = useRef<any>()
@@ -15,43 +16,50 @@ export const ShoppingCart = (props: any) => {
     })
   }
 
-  let arrObj = [
-    {
-      itemImg: itemImg,
-      description: 'DESCRIPTION 1',
-      quantity: 1,
-      title: 'TITLE 1',
-      price: 20,
-    },
-    {
-      itemImg: itemImg,
-      description: 'DESCRIPTION 2',
-      quantity: 2,
-      title: 'TITLE 2',
-      price: 20,
-    },
-    {
-      itemImg: itemImg,
-      description: 'DESCRIPTION 3',
-      quantity: 5,
-      title: 'TITLE 3',
-      price: 20,
-    },
-    {
-      itemImg: itemImg,
-      description: 'DESCRIPTION 3',
-      quantity: 5,
-      title: 'TITLE 3',
-      price: 20,
-    },
-    {
-      itemImg: itemImg,
-      description: 'DESCRIPTION 3',
-      quantity: 5,
-      title: 'TITLE 3',
-      price: 20,
-    },
-  ]
+  // let arrObj = [
+  //   {
+  //     itemImg: itemImg,
+  //     description: 'DESCRIPTION 1',
+  //     quantity: 1,
+  //     title: 'TITLE 1',
+  //     price: 20,
+  //   },
+  //   {
+  //     itemImg: itemImg,
+  //     description: 'DESCRIPTION 2',
+  //     quantity: 2,
+  //     title: 'TITLE 2',
+  //     price: 20,
+  //   },
+  //   {
+  //     itemImg: itemImg,
+  //     description: 'DESCRIPTION 3',
+  //     quantity: 5,
+  //     title: 'TITLE 3',
+  //     price: 20,
+  //   },
+  //   {
+  //     itemImg: itemImg,
+  //     description: 'DESCRIPTION 3',
+  //     quantity: 5,
+  //     title: 'TITLE 3',
+  //     price: 20,
+  //   },
+  //   {
+  //     itemImg: itemImg,
+  //     description: 'DESCRIPTION 3',
+  //     quantity: 5,
+  //     title: 'TITLE 3',
+  //     price: 20,
+  //   },
+  // ]
+
+  const store = useBoundStore()
+
+  const cartObjects = store.shoppingCart
+
+  console.log('cartObjects:')
+  console.log(cartObjects)
 
   return (
     <>
@@ -68,17 +76,30 @@ export const ShoppingCart = (props: any) => {
             <p className="col-span-2 text-lg">Quantity</p>
             <p className="col-span-1 text-lg">Price</p>
           </div>
-          <div className="h-[450px] overflow-x-hidden overflow-y-scroll mb-10">
-            {arrObj.map((shopItem, idx) => (
-              <ShoppingCartItem
-                description={shopItem.description}
-                itemImg={shopItem.itemImg}
-                quantity={shopItem.quantity}
-                title={shopItem.title}
-                price={shopItem.price}
-                key={idx}
-              />
-            ))}
+          <div className="h-[50vh] overflow-x-hidden overflow-y-scroll mb-10">
+            {cartObjects.map(
+              (
+                shopItem: {
+                  id: number
+                  description: string
+                  itemImg: any
+                  quantity: number
+                  title: string
+                  price: number
+                },
+                idx: number,
+              ) => (
+                <ShoppingCartItem
+                  id={shopItem.id}
+                  description={shopItem.description}
+                  itemImg={shopItem.itemImg}
+                  quantity={shopItem.quantity}
+                  title={shopItem.title}
+                  price={shopItem.price}
+                  key={idx}
+                />
+              ),
+            )}
           </div>
           <span className="flex justify-end">
             <button className="px-7 py-3 bg-themeGreen ">

@@ -99,30 +99,36 @@ class PetController extends AbstractController
     */
     public function addPet(Request $request): JsonResponse
     {
-        try{
-            $pet = new Pet();
-            $data = $request->getContent();
-            $data = json_decode($data, true);
-            $em  =$this->doctrine->getManager();
-            $user = $em->getRepository(User::class)->findOneBy(['id' => 1]);
-            $category = $em->getRepository(Category::class)->findOneBy(['name' => strtolower($data['category'])]);
-            $pet->setUser($user);
-            $pet->setName($data['name']);
-            $pet->setBreed($data['breed']);
-            $pet->setStatus($data['status']);
-            $pet->setCategory($category);
-            $pet->setDescription($data['description']);
-            $pet->setCreatedAt(1);
-            $pet->setLastUpdatedAt(1);
-            if($data['facts']){
-                $pet->setFacts($data['facts']);
+            try{
+                $pet = new Pet();
+                $data = $request->getContent();
+                $data = json_decode($data, true);
+                $em  =$this->doctrine->getManager();
+                $user = $em->getRepository(User::class)->findOneBy(['id' => 1]);
+                $category = $em->getRepository(Category::class)->findOneBy(['name' => strtolower($data['category'])]);
+                $pet->setUser($user);
+                $pet->setName($data['name']);
+                $pet->setBreed($data['breed']);
+                $pet->setStatus($data['status']);
+                $pet->setCategory($category);
+                $pet->setDescription($data['description']);
+                $pet->setCreatedAt(1);
+                $pet->setLastUpdatedAt(1);
+                if($data['facts']){
+                    $pet->setFacts($data['facts']);
+                }
+                if($data['images'] && !empty($data['images'])){
+                    $pet->setImages($data['images']);
+                }
+                if($data['frontImage'] && !empty($data['frontImage'])){
+                    $pet->setFrontImage($data['frontImage']);
+                }
+                $em->persist($pet);
+                $em->flush();
+                return $this->json('success');
+            }catch (\Exception $e){
+                return $this->json('failure');
             }
-            $em->persist($pet);
-            $em->flush();
-            return $this->json('success');
-        }catch(\Exception $exception){
-            return $this->json('failed');
-        }
     }
 
     #[Route('/show/{id}', name: 'show')]
@@ -162,4 +168,38 @@ class PetController extends AbstractController
         $entityManager->flush();
         return $this->redirect($this->generateUrl('pet.show'));
     }
+
+    
+/**
+ * @Route("/personal-pets/{userId}", name="app_personal_pets", methods={"GET"})
+ */
+public function getPersonalPets(Request $request, SerializerInterface $serializer, int $userId): JsonResponse
+{
+    try {
+        // Fetch items based on user ID from the database
+        $em = $this->doctrine->getManager();
+        $items = $em->getRepository(Pet::class)
+            ->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+
+        if (empty($items)) {
+            throw new \Exception('Items not found');
+        }
+
+        // Serialize the list of items
+        $serialized = $serializer->serialize(
+            $items,
+            'json',
+            ['groups' => 'pet']
+        );
+        return new JsonResponse($serialized, 200, [], true);
+    } catch (\Exception $e) {
+        return new JsonResponse(['error' => $e->getMessage()], 400);
+    }
+}
+
 }

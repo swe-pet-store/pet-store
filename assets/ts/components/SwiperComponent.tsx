@@ -10,46 +10,20 @@ import 'swiper/css/navigation'
 import { ITestimonial } from 'interfaces/testimonialInterface'
 import { IItem } from 'interfaces/itemInterface'
 import { IPet } from 'interfaces/petInterface'
+import { Link } from 'react-router-dom'
+import { useBoundStore } from '../store/index'
+
 export const SwiperComponent = (props: {
   type: string
   page: string
   itemsToShow: IItem[] | ITestimonial[] | IPet[]
+  setItemVisible?: any
+  setPetVisible?: any
 }) => {
-  // var sampleThing: number[] = [1, 1, 1, 11, 1, 1]
-
-  // const sampleItemObject = {
-  //   id: 1,
-  //   user_id: 1,
-  //   category: { id: 1, name: 'Dog' },
-  //   name: 'Memory Foam Dog Bed 1',
-  //   price: 20,
-  //   quantity: 2,
-  //   description: 'pet item 1',
-  //   state: 'new',
-  //   images: undefined,
-  //   created_at: 123,
-  //   last_updated_at: 125,
-  //   status: 'available',
-  //   discount: 0,
-  // }
-
-  // const petExample = {
-  //   id: 1
-  //   category_id: number
-  //   user_id: number
-  //   name: string
-  //   breed: string
-  //   description: string
-  //   images?: any
-  //   status: string
-  //   created_at: number
-  //   last_updated_at: number
-  //   age: number
-  //   facts: string
-  // }
-
   let spaceBetween = 0
   let slidesPerView = 0
+
+  const store = useBoundStore()
 
   switch (props.type) {
     case 'pets':
@@ -91,6 +65,16 @@ export const SwiperComponent = (props: {
           },
         }
 
+  function handleClickPet(item: any) {
+    store.setDefaultModalItem(item)
+    props.setPetVisible(true)
+  }
+
+  function handleItemClick(item: any) {
+    store.setDefaultModalItem(item)
+    props.setItemVisible(true)
+  }
+
   return (
     <Swiper
       pagination={{
@@ -105,7 +89,6 @@ export const SwiperComponent = (props: {
       navigation={{
         enabled: props.type === 'testimonial',
       }}
-      //   modules={[Virtual]}
       virtual
       autoplay
       spaceBetween={spaceBetween}
@@ -115,13 +98,25 @@ export const SwiperComponent = (props: {
         return (
           <SwiperSlide className="" virtualIndex={index} key={index}>
             {props.type === 'pets' && (
-              <div className="mb-12 4xl:mr-12 mr-6">
-                {/* <ProfilePetCard  key={index} /> */}
+              <div
+                className="mb-12 4xl:mr-12 mr-6"
+                onClick={() => handleClickPet(item)}>
+                <ProfilePetCard pet={item} key={index} />
               </div>
             )}
-            {props.type === 'items' && (
-              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
+            {props.type === 'items' && props.page === 'Profile' && (
+              <div
+                className="mb-12 4xl:mr-12 mr-6"
+                key={index}
+                onClick={() => handleItemClick(item)}>
                 <ItemCarouselTemplate item={item} />
+              </div>
+            )}
+            {props.type === 'items' && props.page === 'Home' && (
+              <div className="mb-12 4xl:mr-12 mr-6" key={index}>
+                <Link to={`/item/${item.id}`}>
+                  <ItemCarouselTemplate item={item} />
+                </Link>
               </div>
             )}
             {props.type === 'testimonial' && (

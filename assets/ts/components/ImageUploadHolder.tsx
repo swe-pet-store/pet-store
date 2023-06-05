@@ -11,13 +11,15 @@ export const ImageUploadHolder = ({
   return (
     <div className="mt-3 flex flex-wrap w-4/5 ">
       {selectedImages &&
-        selectedImages.map((image: Blob | MediaSource, i: number) => {
+        selectedImages.map((image: Blob | MediaSource | string, i: number) => {
           return (
             <div
               key={i}
               className="flex justify-start items-start relative max-h-28 w-1/3">
               <img
-                src={URL.createObjectURL(image)}
+                src={
+                  image instanceof Object ? URL.createObjectURL(image) : image
+                }
                 alt="Test"
                 className="object-contain w-full max-h-full"
               />

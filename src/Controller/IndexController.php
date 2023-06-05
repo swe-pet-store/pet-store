@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Repository\ItemRepository;
 use App\Repository\PetRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,6 +35,7 @@ class IndexController extends AbstractController
 
         return $this->json($arrayOfPets);
     }
+
 
     /**
     *@Route("/{reactRouting}", name="app_main", priority="-1", defaults={"reactRouting": null}, requirements={"reactRouting"=".+"})   

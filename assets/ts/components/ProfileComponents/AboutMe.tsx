@@ -11,6 +11,8 @@ export const AboutMe = () => {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.',
   )
 
+  const [selectedFrontImage, setSelectedFrontImage] = useState<null | any>(null)
+
   const [rowNr, setRowNr] = useState()
 
   return (
@@ -30,7 +32,11 @@ export const AboutMe = () => {
             src={duck}
             className="w-60 sm:w-40 lg:w-52 xl:w-60 2xl:w-80 mb-12 lg:mb-20"
           /> */}
-          <FrontPicture editable={buttonToggle} />
+          <FrontPicture
+            editable={buttonToggle}
+            selectedFrontImage={selectedFrontImage}
+            setSelectedFrontImage={setSelectedFrontImage}
+          />
           <PersonalInfo
             editable={buttonToggle}
             email={email}
@@ -48,7 +54,6 @@ export const AboutMe = () => {
             rows={Math.ceil(personalDescription.length / 20)}
             placeholder="A brief description here"
             onChange={e => {
-              console.log(e.target.value.length)
               if (e.target.value.length <= 310)
                 setPersonalDescription(e.target.value)
             }}

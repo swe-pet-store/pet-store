@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // Import Swiper styles
 import { SwiperComponent } from './SwiperComponent'
 import { NewItemModal } from './modals/NewItemModal'
 import { setItem } from 'localforage'
 import { NewPetModal } from './modals/NewPetModal'
+import axios from 'axios'
 export const SwiperListProfile = (props: any) => {
   //TODO change to virtual once API calls are done
 
@@ -14,6 +15,37 @@ export const SwiperListProfile = (props: any) => {
 
   const modalHandleVisible =
     props.type === 'pets' ? setPetModalVisible : setItemModalVisible
+
+  const [itemsToPass, setItemsToPass] = useState([])
+  const likedItemIds = [2, 3, 5]
+  const userId = 2
+
+  useEffect(() => {
+    if (props.type === 'favorites') {
+      axios
+        .get(`/item/liked-items`, {
+          params: { itemIds: likedItemIds.join(',') },
+        })
+        .then(response => {
+          setItemsToPass(response.data)
+        })
+        .catch(err => console.error(err))
+    } else if (props.type === 'items') {
+      axios
+        .get(`/item/personal-items/${userId}`)
+        .then(response => {
+          setItemsToPass(response.data)
+        })
+        .catch(err => console.error(err))
+    } else {
+      axios
+        .get(`/pet/personal-pets/${userId}`)
+        .then(response => {
+          setItemsToPass(response.data)
+        })
+        .catch(err => console.error(err))
+    }
+  }, [])
 
   return (
     <>
@@ -29,7 +61,9 @@ export const SwiperListProfile = (props: any) => {
           )}
         </div>
         <SwiperComponent
-          itemsToShow={[]}
+          setItemVisible={setItemModalVisible}
+          setPetVisible={setPetModalVisible}
+          itemsToShow={itemsToPass}
           type={props.type}
           page="Profile"
           key={9090}

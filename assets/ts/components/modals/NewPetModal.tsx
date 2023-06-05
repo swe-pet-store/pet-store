@@ -10,6 +10,13 @@ import { Toast } from 'primereact/toast'
 //@ts-ignore
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
+import {
+  blobsToBase64,
+  blobToBase64,
+  showErrorToast,
+  showProcessingToast,
+  showSuccessToast,
+} from '../../utils/helperFunctions'
 
 export const NewPetModal = (props: any) => {
   const toast = useRef<any>()
@@ -24,6 +31,8 @@ export const NewPetModal = (props: any) => {
 
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
+  const [selectedFrontImage, setSelectedFrontImage] = useState<null | any>(null)
+
   const [category, setCategory] = useState<any | null>(null)
 
   const [name, setName] = useState<string>()
@@ -34,14 +43,12 @@ export const NewPetModal = (props: any) => {
 
   const [description, setDescription] = useState<string>()
   const [facts, setFacts] = useState<string>()
-
+  const [disabled, setDisabled] = useState(false)
   const hiddenImageInput = useRef<any>()
 
   const statuses = ['Not adopted', 'Adopted']
 
   const categories = ['Dog', 'Cat', 'Other']
-
-  // const handleCLicks
 
   const handleClick = () => {
     if (selectedImages.length >= 5) {
@@ -67,19 +74,40 @@ export const NewPetModal = (props: any) => {
   const handleDeleteImage = (index: number) => {
     setSelectedImages(prevImages => prevImages?.filter((_, i) => i !== index))
   }
-
   function handleSubmit() {
-    const bodyForm = {
-      category: category.name,
-      name: name,
-      breed: breed,
-      status: status.name,
-      description: description,
-      facts: facts,
+    setDisabled(true)
+    showProcessingToast(toast)
+    if (selectedImages.length === 0) {
+      showErrorToast(toast, 'You have added no images')
+      setDisabled(false)
+      return
     }
 
-    axios.post('/pet/add-pet', bodyForm).then(response => {
-      console.log(response.data)
+    blobsToBase64(selectedImages).then(base64Array => {
+      blobToBase64(selectedFrontImage)
+        .then(frontImage64 => {
+          const bodyForm = {
+            category: category,
+            name: name,
+            breed: breed,
+            status: status,
+            description: description,
+            facts: facts,
+            images: base64Array,
+            frontImage: frontImage64,
+          }
+
+          axios.post('/pet/add-pet', bodyForm).then(response => {
+            setDisabled(false)
+            showSuccessToast(
+              toast,
+              'You have successfully added this pet to your page',
+            )
+            props.setVisible(false)
+          })
+        })
+
+        .catch(err => showErrorToast(toast, err.message))
     })
   }
 
@@ -92,7 +120,11 @@ export const NewPetModal = (props: any) => {
         onHide={() => props.setVisible(false)}>
         <div className="flex flex-col mx-0 md:mx-5 font-medium text-lg ">
           <div className="flex flex-col md:flex-row w-full items-center">
-            <FrontPicture title="Pet profile picture" />
+            <FrontPicture
+              title="Pet profile picture"
+              selectedFrontImage={selectedFrontImage}
+              setSelectedFrontImage={setSelectedFrontImage}
+            />
 
             <div className="md:basis-3/4 w-full text-center mt-5 md:mt-0 ">
               <p className="mb-3">Additional pictures</p>
@@ -189,8 +221,11 @@ export const NewPetModal = (props: any) => {
 
           <div className="flex items-center justify-center mt-8">
             <button
-              className="bg-themeGreen h-14 w-28 text-xl"
-              onClick={handleSubmit}>
+              className={`bg-themeGreen h-14 w-28 text-xl ${
+                disabled && 'cursor-wait'
+              }`}
+              onClick={handleSubmit}
+              disabled={disabled}>
               SAVE
             </button>
           </div>

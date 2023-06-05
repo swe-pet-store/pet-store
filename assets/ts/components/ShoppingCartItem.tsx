@@ -6,9 +6,10 @@ import {
 } from 'primereact/inputnumber'
 //@ts-ignore
 import styles from '../../styles/shoppingcart.css'
-import { HiOutlineTrash } from 'react-icons/hi'
+import { useBoundStore } from '../store/index'
 
 interface IShoppingCartItem {
+  id: number
   itemImg: any
   title: string
   description: string
@@ -17,6 +18,7 @@ interface IShoppingCartItem {
 }
 
 export const ShoppingCartItem = ({
+  id,
   itemImg,
   description,
   quantity,
@@ -26,6 +28,8 @@ export const ShoppingCartItem = ({
   const [quantityVal, setQuantityVal] = useState<number | undefined | null>(
     quantity,
   )
+
+  const store = useBoundStore()
 
   return (
     <div
@@ -43,11 +47,12 @@ export const ShoppingCartItem = ({
       </span>
       <span className="col-span-2" style={styles}>
         <InputNumber
-          inputStyle={{ width: '40%' }}
+          inputStyle={{ width: '70%' }}
           style={styles}
           value={quantityVal}
           onValueChange={(e: InputNumberValueChangeEvent) => {
             setQuantityVal(e.value)
+            store.updateShoppingCartItem(id, e.value)
           }}
           showButtons
           min={1}
@@ -59,10 +64,10 @@ export const ShoppingCartItem = ({
       </p>
       <span className="col-span-1">
         <button
-          onClick={() => {}}
+          onClick={() => {
+            store.removeShoppingCartItem(id)
+          }}
           className=" px-2 py-2 rounded-xl border-[#D55353] border text-white font-medium ">
-          {/* <HiOutlineTrash color="#D55353" size={26} />
-           */}
           <img src={trash} />
         </button>
       </span>

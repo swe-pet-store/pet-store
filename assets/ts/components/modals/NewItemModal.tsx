@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { ImageUploadHolder } from '../ImageUploadHolder'
 import { FrontPicture } from '../FrontPicture'
@@ -11,20 +11,24 @@ import { Toast } from 'primereact/toast'
 //@ts-ignore
 import styles from '../../../styles/profile.module.css'
 import axios from 'axios'
+import {
+  blobToBase64,
+  blobsToBase64,
+  categoryTranslator,
+  showErrorToast,
+  showProcessingToast,
+  showSuccessToast,
+  showWarningToast,
+} from '../../utils/helperFunctions'
+import { useBoundStore } from '../../store/index'
 
 export const NewItemModal = (props: any) => {
   const toast = useRef<any>()
-
-  const showWarningToast = () => {
-    toast.current!.show({
-      severity: 'warn',
-      summary: 'Warning',
-      detail: 'You can only add up to 5 additional images per item',
-    })
-  }
-
+  const store = useBoundStore()
+  const defaults = store.defaultModalItem
   const [selectedImages, setSelectedImages] = useState<any[]>([])
 
+  const [selectedFrontImage, setSelectedFrontImage] = useState<any | null>(null)
   const [category, setCategory] = useState<any | null>(null)
 
   const [quantity, setQuantity] = useState<string>()
@@ -37,17 +41,32 @@ export const NewItemModal = (props: any) => {
 
   const [itemState, setItemState] = useState<any | null>(null)
 
-  const [description, setDescription] = useState<string>()
+  const [description, setDescription] = useState<string>('')
 
   const hiddenImageInput = useRef<any>()
 
   const itemStates = ['New', 'Slightly Used', 'Used']
 
-  const categories = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Other' }]
+  const categories = ['Dog', 'Cat', 'Other']
+
+  const [disabled, setDisabled] = useState(false)
+
+  useEffect(() => {
+    if (defaults !== undefined && defaults.hasOwnProperty('name')) {
+      setCategory(categoryTranslator(defaults.category.id))
+      setQuantity(defaults.quantity.toString())
+      setPrice(defaults.price.toString())
+      setName(defaults.name)
+      setItemState(defaults.state)
+      setDescription(defaults.description)
+      setDiscount(defaults.discount.toString())
+      setSelectedImages(JSON.parse(defaults.images))
+    }
+  }, [defaults])
 
   const handleClick = () => {
     if (selectedImages.length >= 5) {
-      showWarningToast()
+      showWarningToast(toast)
       return
     }
     hiddenImageInput?.current?.click()
@@ -56,7 +75,7 @@ export const NewItemModal = (props: any) => {
   const handleChange = (event: any) => {
     if (event.target.files && event.target.files.length > 0) {
       if (event.target.files.length > 5) {
-        showWarningToast()
+        showWarningToast(toast)
       }
 
       setSelectedImages(currentImages => [
@@ -71,17 +90,38 @@ export const NewItemModal = (props: any) => {
   }
 
   function handleSubmit() {
-    const bodyForm = {
-      category: category.name,
-      quantity: quantity,
-      price: price,
-      name: name,
-      description: description,
-      state: itemState.name,
-    }
+    setDisabled(true)
 
-    axios.post('/item/add-item', bodyForm).then(response => {
-      console.log(response.data)
+    showProcessingToast(toast)
+    if (selectedImages.length === 0) {
+      showErrorToast(toast, 'You have added no images')
+      setDisabled(false)
+      return
+    }
+    blobsToBase64(selectedImages).then(base64Array => {
+      blobToBase64(selectedFrontImage).then(frontImage64 => {
+        const bodyForm = {
+          category: category.name,
+          quantity: quantity,
+          price: price,
+          name: name,
+          description: description,
+          state: itemState,
+          images: base64Array,
+          frontImage: frontImage64,
+        }
+        axios
+          .post('/item/add-item', bodyForm)
+          .then(response => {
+            setDisabled(false)
+            showSuccessToast(
+              toast,
+              'You have successfully added this item to your page',
+            )
+            props.setVisible(false)
+          })
+          .catch(err => showErrorToast(toast, err.message))
+      })
     })
   }
 
@@ -91,10 +131,17 @@ export const NewItemModal = (props: any) => {
       <Dialog
         visible={props.visible}
         className=" xsm:w-full sm:w-auto md:w-2/3 xl:w-1/2 "
-        onHide={() => props.setVisible(false)}>
-        <div className="flex flex-col mx-0 md:mx-5 font-medium text-lg ">
+        onHide={() => {
+          props.setVisible(false)
+          store.setDefaultModalItem({})
+        }}>
+        <div className=" flex flex-col mx-0 md:mx-5 font-medium text-lg  ">
           <div className="flex flex-col md:flex-row w-full items-center">
-            <FrontPicture title={'Item front picture'} />
+            <FrontPicture
+              title={'Item front picture'}
+              selectedFrontImage={selectedFrontImage}
+              setSelectedFrontImage={setSelectedFrontImage}
+            />
 
             <div className="md:basis-3/4 w-full text-center mt-5 md:mt-0 ">
               <p className="mb-3">Additional pictures</p>
@@ -132,8 +179,10 @@ export const NewItemModal = (props: any) => {
                   value={category}
                   onChange={e => setCategory(e.value)}
                   options={categories}
-                  optionLabel="name"
-                  placeholder="Select a Category"
+                  placeholder={
+                    defaults?.category?.name.charAt(0).toUpperCase() +
+                      defaults?.category?.name.slice(1) || 'Select a Category'
+                  }
                 />
               </div>
               <div className="w-full sm:w-1/3">
@@ -173,7 +222,12 @@ export const NewItemModal = (props: any) => {
                   onChange={e => setItemState(e.value)}
                   options={itemStates}
                   // optionLabel="state"
-                  placeholder="Select state"
+                  placeholder={
+                    defaults?.state
+                      ?.replace(/_/g, ' ')
+                      .replace(/\b\w/g, (c: string) => c.toUpperCase()) ||
+                    'Select state'
+                  }
                 />
               </div>
               <div className="flex flex-col w-full sm:w-1/3 ">
@@ -205,8 +259,11 @@ export const NewItemModal = (props: any) => {
           </span>
           <div className="flex items-center justify-center mt-8">
             <button
-              className="bg-themeGreen h-14 w-28 text-xl"
-              onClick={handleSubmit}>
+              className={`bg-themeGreen h-14 w-28 text-xl ${
+                disabled && 'cursor-wait'
+              }`}
+              onClick={handleSubmit}
+              disabled={disabled}>
               SAVE
             </button>
           </div>

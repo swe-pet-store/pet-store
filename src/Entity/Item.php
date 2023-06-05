@@ -34,6 +34,10 @@ class Item
     #[Groups(['item'])]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['item'])]
+    private ?string $frontImage = null;
+
     #[ORM\ManyToOne(inversedBy: 'item')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['item'])]
@@ -43,9 +47,9 @@ class Item
     #[Groups(['item'])]
     private ?string $state = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column]
     #[Groups(['item'])]
-    private ?string $images;
+    private ?array $images;
 
     #[ORM\Column]
     #[Groups(['item'])]
@@ -66,6 +70,10 @@ class Item
     #[ORM\Column(nullable: true)]
     #[Groups(['item'])]
     private ?int $discount = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['item'])]
+    private ?int $likes = null;
 
     public function getId(): ?int
     {
@@ -120,6 +128,18 @@ class Item
         return $this;
     }
 
+    public function getFrontImage(): ?string
+    {
+        return $this->frontImage;
+    }
+
+    public function setFrontImage(?string $frontImage): self
+    {
+        $this->frontImage = $frontImage;
+
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -144,7 +164,7 @@ class Item
         return $this;
     }
 
-    public function getImages()
+    public function getImages(): ?array
     {
         return $this->images;
     }
@@ -212,6 +232,18 @@ class Item
     public function setDiscount(?int $discount): self
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(?int $likes): self
+    {
+        $this->likes = $likes;
 
         return $this;
     }

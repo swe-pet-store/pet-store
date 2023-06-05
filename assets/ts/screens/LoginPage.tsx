@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import dogImage from '../components/images/doggy.png'
-import axios from "axios";
+import axios from 'axios'
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -21,11 +21,9 @@ export const LoginPage = () => {
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault()
-    console.log('Email:', email)
-    console.log('Password:', password)
-    const payload = {email: email, password: password}
+    const payload = { email: email, password: password }
     //axios.post('/api/register', payload).then(data => console.log("Data",data))
-    axios.post("/api/login-user", payload).then(r => console.log("DATA:", r))
+    axios.post('/api/login-user', payload).then(r => console.log('DATA:', r))
   }
 
   const containerStyle: React.CSSProperties | undefined = {

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\RefreshToken;
 use App\Entity\User;
+use App\Repository\ItemRepository;
+use App\Repository\PetRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +22,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 class UserController extends AbstractController
 {
+    private $entityManager;
     private JWTTokenManagerInterface $jwtManager;
 
-    public function __construct(JWTTokenManagerInterface $jwtManager)
+    public function __construct(JWTTokenManagerInterface $jwtManager, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
         $this->jwtManager = $jwtManager;
     }
     #[Route('/user', name: 'app_user')]
@@ -38,7 +42,7 @@ class UserController extends AbstractController
      */
     public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-//        dd($request);
+
         $data = json_decode($request->getContent(), true);
         $user = new User();
         $user->setName($data['name']);
@@ -49,13 +53,9 @@ class UserController extends AbstractController
         $user->setEmail($data['email']);
         $user->setAddress($data['address']);
         $user->setPhoneNumber($data['phone_number']);
-
         $entityManager->persist($user);
         $entityManager->flush();
-//        dd($user);
         return new Response("success");
-
-//        return $this->redirect($this->generateUrl('app_login'));
     }
     /**
      * @Route("/login-user", name="login-user", methods={"POST"})
