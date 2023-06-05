@@ -32,9 +32,13 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:details','item', 'pet'])]
+//    #[Groups(['user:details','item', 'pet'])]
     private ?string $description = null;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private ?string $image;
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
@@ -164,6 +168,18 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
     }
 
     /**

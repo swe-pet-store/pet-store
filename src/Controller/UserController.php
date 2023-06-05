@@ -13,6 +13,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Util\SecureRandom;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 /**
@@ -86,32 +88,35 @@ class UserController extends AbstractController
         if(!$email || !$password){
             return new Response("Wrong credentials");
         }
-        $isPasswordValid = $passwordHasher->isPasswordValid($user, $password);
-        if(!$isPasswordValid){
-            return new Response("Invalid pass");
-        }
 
-        $userExists = $userRepository->findBy(['email'=>$email]);
+        $userExists = $userRepository->findOneBy(['email'=>$email]);
         if(!$userExists){
             return new Response("User does not exist");
         }
+        $isPasswordValid = $passwordHasher->isPasswordValid($userExists, $password);
+        if(!$isPasswordValid){
+            return new Response("Invalid pass");
+        }
+        $token = $this->jwtManager->create($user);
+//            $bytes = random_bytes(50);
+//            $refresh_token = bin2hex($bytes);
+//
+//            $refresh_token_object = new RefreshToken();
+//            $refresh_token_object->setUsername($userExists[0]->getName());
+//            $refresh_token_object->setRefreshToken($refresh_token);
+//
+//            $datetime = new \DateTime();
+//            $datetime->modify('+1 year');
+//            $refresh_token_object->setValid($datetime);
+//
+//            $entityManager->persist($refresh_token_object);
+//            $entityManager->flush();
+//            return $this->json(['token' => $token, 'refresh_token'=>$refresh_token]);
+        return $this->json(['token' => $token, 'refresh_token'=>"test"]);
+
 
         //generate token
-        $token = $this->jwtManager->create($user);
-        $bytes = random_bytes(50);
-        $refresh_token = bin2hex($bytes);
 
-        $refresh_token_object = new RefreshToken();
-        $refresh_token_object->setUsername($userExists[0]->getName());
-        $refresh_token_object->setRefreshToken($refresh_token);
-
-        $datetime = new \DateTime();
-        $datetime->modify('+1 year');
-        $refresh_token_object->setValid($datetime);
-
-        $entityManager->persist($refresh_token_object);
-        $entityManager->flush();
-        return $this->json(['token' => $token, 'refresh_token'=>$refresh_token]);
         //redirect user to homepage
 //        return $this->redirect($this->generateUrl('api_register'));
     }
@@ -133,18 +138,28 @@ class UserController extends AbstractController
      * @Route("/user-profile", name="user-profile", methods={"POST"})
      * @throws JWTDecodeFailureException
      */
-    public function getUserData(Request $request, UserRepository $userRepository): \Symfony\Component\HttpFoundation\JsonResponse
+    public function getUserData(Request $request, UserRepository $userRepository, SerializerInterface $serializer)
     {
 //        $user = $this->getUser();
 //        $user = $token->getUser();
 //        dd($user);
 //        return $this->json($user);
-          $data = json_decode($request->getContent(), true);
-          $email = $data['localData']['email'];
+        $data = json_decode($request->getContent(), true);
+        $email = $data['localData']['email'];
+        $user = $userRepository->findBy(['email'=>$email]);
 
-          $user = $userRepository->findBy(['email'=>$email]);
+        $serialized = $serializer->serialize(
+            $user,
+            'json',
+            ['groups' => 'user:details']
+        );
 
-          return $this->json($user);
+        dump($serialized);
+        //   var_dump($serialized);
+
+        //   return $this->json($serialized);
+        return new JsonResponse($serialized,200,[],true);
+
 
     }
 
