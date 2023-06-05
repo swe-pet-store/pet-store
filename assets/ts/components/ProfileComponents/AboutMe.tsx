@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react'
 import { PersonalInfo } from './PersonalInfo'
 import duck from '../../components/images/duck.png'
 import { FrontPicture } from '../../components/FrontPicture'
-export const AboutMe = () => {
+import axios from "axios";
+export const AboutMe = ({initialEmail = ""}) => {
   const [buttonToggle, setButtonToggle] = useState<boolean>(false)
   const [name, setName] = useState('DUCKINHO')
   const [email, setEmail] = useState('duckemail@gmail.com')
@@ -20,12 +21,16 @@ export const AboutMe = () => {
       <div className="flex lg:flex-col flex-col sm:flex-row justify-around  lg:justify-start lg:items-center mb-14 ">
         <div className="flex flex-col items-center justify-center">
           <button
-            onClick={() => {
-              setButtonToggle(e => !e)
-            }}
-            className={`${
-              buttonToggle ? 'bg-themeGreen' : 'bg-themeBrown-400'
-            } w-20 h-10 md:w-28 md:h-14 rounded-2xl text-2xl self-start mb-8`}>
+              onClick={() => {
+                setButtonToggle(e => {
+                  if(e)
+                    axios.put('api/edit-user', {name: name, email:email, phoneNumber:phoneNumber, personalDescription: personalDescription, initialEmail: initialEmail}).then(r => console.log(r))
+                  return !e
+                })
+              }}
+              className={`${
+                  buttonToggle ? 'bg-themeGreen' : 'bg-themeBrown-400'
+              } w-20 h-10 md:w-28 md:h-14 rounded-2xl text-2xl self-start mb-8`}>
             {buttonToggle ? 'Save' : 'Edit'}
           </button>
           {/* <img

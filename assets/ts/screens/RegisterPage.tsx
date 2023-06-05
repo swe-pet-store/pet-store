@@ -4,7 +4,7 @@ import axios from "axios";
 export const Register = () => {
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault()
-    const payload = {name:"admin", surname:"admin",email:'admin1@gmail.com', password:'admin', address:"somewhere", phone_number:"123123123"}
+    const payload = {name:"admin", surname:"admin",email:'admin11@gmail.com', password:'admin', address:"somewhere", phone_number:"123123123"}
     axios.post('/api/register-user', payload).then(data => console.log("Data",data))
   }
   return (

@@ -7,15 +7,23 @@ use App\Entity\User;
 use App\Repository\ItemRepository;
 use App\Repository\PetRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Util\SecureRandom;
+
 
 /**
  * @Route("/api", name="api_")
@@ -24,11 +32,13 @@ class UserController extends AbstractController
 {
     private $entityManager;
     private JWTTokenManagerInterface $jwtManager;
+    private JWTEncoderInterface $jwtEncoder;
 
-    public function __construct(JWTTokenManagerInterface $jwtManager, EntityManagerInterface $entityManager)
+    public function __construct(JWTTokenManagerInterface $jwtManager, EntityManagerInterface $entityManager, JWTEncoderInterface $jwtEncoder)
     {
         $this->entityManager = $entityManager;
         $this->jwtManager = $jwtManager;
+        $this->jwtEncoder = $jwtEncoder;
     }
     #[Route('/user', name: 'app_user')]
     public function index(): Response
@@ -57,8 +67,10 @@ class UserController extends AbstractController
         $entityManager->flush();
         return new Response("success");
     }
+
     /**
      * @Route("/login-user", name="login-user", methods={"POST"})
+     * @throws \Exception
      */    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): \Symfony\Component\HttpFoundation\JsonResponse|Response
     {
         $data = json_decode($request->getContent(), true);
@@ -86,7 +98,20 @@ class UserController extends AbstractController
 
         //generate token
         $token = $this->jwtManager->create($user);
-        return $this->json(['token' => $token]);
+        $bytes = random_bytes(50);
+        $refresh_token = bin2hex($bytes);
+
+        $refresh_token_object = new RefreshToken();
+        $refresh_token_object->setUsername($userExists[0]->getName());
+        $refresh_token_object->setRefreshToken($refresh_token);
+
+        $datetime = new \DateTime();
+        $datetime->modify('+1 year');
+        $refresh_token_object->setValid($datetime);
+
+        $entityManager->persist($refresh_token_object);
+        $entityManager->flush();
+        return $this->json(['token' => $token, 'refresh_token'=>$refresh_token]);
         //redirect user to homepage
 //        return $this->redirect($this->generateUrl('api_register'));
     }
@@ -103,4 +128,47 @@ class UserController extends AbstractController
 
         return new Response("user logged out");
     }
+
+    /**
+     * @Route("/user-profile", name="user-profile", methods={"POST"})
+     * @throws JWTDecodeFailureException
+     */
+    public function getUserData(Request $request, UserRepository $userRepository): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+//        $user = $this->getUser();
+//        $user = $token->getUser();
+//        dd($user);
+//        return $this->json($user);
+          $data = json_decode($request->getContent(), true);
+          $email = $data['localData']['email'];
+
+          $user = $userRepository->findBy(['email'=>$email]);
+
+          return $this->json($user);
+
+    }
+
+    #[Route('/edit-user', name: 'user_edit', methods: ['PUT'])]
+    public function edit_user(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $initialEmail = $data['initialEmail']['email'];
+        $user = $userRepository->findOneBy(['email'=> $initialEmail]);
+
+        $name = $data['name'];
+        $email = $data['email'];
+        $phone_nr = $data['phoneNumber'];
+        $desc = $data['personalDescription'];
+
+        $user->setDescription($desc);
+        $user->setName($name);
+        $user->setPhoneNumber($phone_nr);
+        $user->setEmail($email);
+
+        $entityManager->flush();
+
+        return $this->json($user);
+    }
+
+
 }
