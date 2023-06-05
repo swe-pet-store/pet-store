@@ -16,19 +16,19 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:details', 'item','pet'])]
+    #[Groups(['user:details', 'item','pet', 'order'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:details', 'item', 'pet'])]
+    #[Groups(['user:details', 'item', 'pet', 'order'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:details','item','pet'])]
+    #[Groups(['user:details','item','pet', 'order'])]
     private ?string $surname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:details','item', 'pet'])]
+    #[Groups(['user:details','item', 'pet', 'order'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -43,15 +43,15 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:details','item','pet'])]
+    #[Groups(['user:details','item','pet', 'order'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:details', 'item', 'pet'])]
+    #[Groups(['user:details', 'item', 'pet', 'order'])]
     private ?string $likedItems = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:details', 'item','pet'])]
+    #[Groups(['user:details', 'item','pet', 'order'])]
     private ?string $address = null;
 
     #[Groups(['user:details'])]
@@ -64,11 +64,15 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Testimonial::class)]
     private Collection $testimonial;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->pet = new ArrayCollection();
         $this->item = new ArrayCollection();
         $this->testimonial = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -290,5 +294,35 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     {
         return $this->name;
         // TODO: Implement getUserIdentifier() method.
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
