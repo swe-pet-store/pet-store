@@ -91,6 +91,7 @@ export const NewItemModal = (props: any) => {
 
   function handleSubmit() {
     setDisabled(true)
+
     showProcessingToast(toast)
     if (selectedImages.length === 0) {
       showErrorToast(toast, 'You have added no images')

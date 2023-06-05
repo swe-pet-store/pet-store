@@ -71,6 +71,10 @@ class Item
     #[Groups(['item'])]
     private ?int $discount = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['item'])]
+    private ?int $likes = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -228,6 +232,18 @@ class Item
     public function setDiscount(?int $discount): self
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(?int $likes): self
+    {
+        $this->likes = $likes;
 
         return $this;
     }

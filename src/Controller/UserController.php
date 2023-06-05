@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\ItemRepository;
+use App\Repository\PetRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +20,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
  */
 class UserController extends AbstractController
 {
+    private $entityManager;
     private JWTTokenManagerInterface $jwtManager;
 
-    public function __construct(JWTTokenManagerInterface $jwtManager)
+    public function __construct(JWTTokenManagerInterface $jwtManager, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
         $this->jwtManager = $jwtManager;
     }
     #[Route('/user', name: 'app_user')]
@@ -51,6 +55,9 @@ class UserController extends AbstractController
         $entityManager->flush();
         return new Response("success");
     }
+
+
+
 //    /**
 //     * @Route("/login-user", name="login-user", methods={"POST"})
 //     */    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): \Symfony\Component\HttpFoundation\JsonResponse|Response
