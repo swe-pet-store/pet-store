@@ -24,11 +24,19 @@ export const LoginPage = () => {
     const payload = { email: email, password: password }
     const data = { email: email };
     axios.post('/api/login-user', payload).then(response => {
-      const auth_token = response.data.token;
-      const refresh_token = response.data.refresh_token;
-      localStorage.setItem('token', auth_token);
-      localStorage.setItem('refresh_token', refresh_token);
-      navigate('/profile', {state: data});
+      console.log("RESPONSE", response);
+      if(response.data === "Invalid pass"){
+        navigate('/login');
+      }
+      else{
+        const auth_token = response.data.token;
+        const refresh_token = response.data.refresh_token;
+        if(auth_token) {
+          localStorage.setItem('token', auth_token);
+          localStorage.setItem('refresh_token', refresh_token);
+          navigate('/profile', {state: data});
+        }
+      }
     }).catch(error => console.log("Error", error))
   }
 

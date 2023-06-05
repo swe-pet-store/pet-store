@@ -32,7 +32,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:details','item', 'pet'])]
+//    #[Groups(['user:details','item', 'pet'])]
     private ?string $description = null;
 
     /**
