@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,7 +17,7 @@ class Item
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -23,57 +25,65 @@ class Item
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?float $price = null;
 
     #[ORM\Column]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?int $quantity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?string $frontImage = null;
 
     #[ORM\ManyToOne(inversedBy: 'item')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?string $state = null;
 
     #[ORM\Column]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?array $images;
 
     #[ORM\Column]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?int $createdAt = null;
 
     #[ORM\Column]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?int $lastUpdatedAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'item')]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?Category $category = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?int $discount = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['item'])]
+    #[Groups(['item', 'order'])]
     private ?int $likes = null;
+
+    #[ORM\OneToMany(mappedBy: 'ManyToOne', targetEntity: Order::class)]
+    private Collection $orders;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -244,6 +254,36 @@ class Item
     public function setLikes(?int $likes): self
     {
         $this->likes = $likes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getItem() === $this) {
+                $order->setItem(null);
+            }
+        }
 
         return $this;
     }
