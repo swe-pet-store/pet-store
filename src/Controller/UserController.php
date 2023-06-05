@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\ItemRepository;
 use App\Repository\PetRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Psr\Container\ContainerExceptionInterface;
@@ -145,6 +146,36 @@ class UserController extends AbstractController
 
           return $this->json($user);
 
+    }
+
+    #[Route('/edit-user', name: 'user_edit', methods: ['PATCH'])]
+    public function edit_user(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $user = $userRepository->find($data['id']);
+        $name = $data['name'];
+        $surname = $data['surname'];
+        $email = $data['email'];
+        $pass = $data['password'];
+        $phone_nr = $data['phone_number'];
+        $liked_items = $data['liked_items'];
+        $address = $data['address'];
+        $desc = $data['description'];
+
+        $user->setDescription($desc);
+        $user->setLikedItems($liked_items);
+        $user->setName($name);
+        $user->setPassword(
+            $passwordHasher->hashPassword($user, $pass)
+        );
+        $user->setSurname($surname);
+        $user->setPhoneNumber($phone_nr);
+        $user->setAddress($address);
+        $user->setEmail($email);
+
+        $entityManager->flush();
+
+        return $this->json($user);
     }
 
 
