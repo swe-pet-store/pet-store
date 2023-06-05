@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
   const handleEmailChange = (event: {
     target: { value: React.SetStateAction<string> }
@@ -26,6 +27,7 @@ export const LoginPage = () => {
     axios.post('/api/login-user', payload).then(response => {
       console.log("RESPONSE", response);
       if(response.data === "Invalid pass"){
+        setError(true);
         navigate('/login');
       }
       else{
@@ -34,6 +36,7 @@ export const LoginPage = () => {
         if(auth_token) {
           localStorage.setItem('token', auth_token);
           localStorage.setItem('refresh_token', refresh_token);
+          setError(false);
           navigate('/profile', {state: data});
         }
       }
@@ -150,11 +153,14 @@ export const LoginPage = () => {
           </button>
 
           <div style={displayInLine}>
-            <h3 style={h3Style}>Don't have an accout?</h3>
+            <h3 style={h3Style}>Don't have an account?</h3>
             <Link to={'/'} style={linkStyle}>
               Create one now
             </Link>
           </div>
+          {error && <div style={{marginLeft: "100px", marginTop: "40px", color: "red"}}>
+            Wrong credentials
+          </div>}
         </form>
       </div>
     </>
