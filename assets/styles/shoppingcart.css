@@ -1,0 +1,8 @@
+.p-inputnumber {
+  width: 70%;
+}
+.p-inputnumber-buttons-stacked
+  .p-inputnumber-button-group
+  .p-button.p-inputnumber-button {
+  width: 20px;
+}

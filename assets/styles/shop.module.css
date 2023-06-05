@@ -1,0 +1,24 @@
+#FILTERBY .p-dropdown-label {
+  font-size: 24px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: black;
+}
+
+.p-dropdown .p-dropdown-label.p-placeholder {
+  color: black;
+  font-weight: 500;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  background: transparent;
+  color: #6c757d;
+  width: 2.357rem;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.p-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
